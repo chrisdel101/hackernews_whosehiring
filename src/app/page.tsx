@@ -1,9 +1,9 @@
 import styles from './page.module.css'
 import SearchAppBar from '../components/Appbar'
+import AppAccordion from '../components/Accordion'
 import { fetchItemById } from '../apiClient/fetch'
 import { currentMonthID } from '../app/constants'
 import fs from 'fs-extra';
-import he from 'he'
 
 const readFile =  () =>{
   const file = fs.readFileSync(process.cwd() + '/sample.txt', 'utf8');
@@ -52,15 +52,11 @@ export default async function Page() {
       <SearchAppBar />
       <main className={`${styles.main} ${styles['jobs-container']}`}>        
         {jobs.map(job => {
-          let parsedJob = parseJobText(job.text)
+          let parsedJob = parseJobText
+          (job.text)
           return (
-            <div key={job.id} className={styles['job-container']}>
-              <h3 className={styles['job-heading']} dangerouslySetInnerHTML={{__html: parsedJob.heading}}/>
-              <div className={styles['job-description-container']}>
-                {parsedJob.descriptions.map((description, index) => {
-                  return <p key={index}className={styles['job-description']}dangerouslySetInnerHTML={{__html: description}}/>
-                })}
-              </div>
+            <div key={job.id}>
+              <AppAccordion heading={parsedJob.heading} descriptions={parsedJob.descriptions}/> 
             </div>
           )
         })}
