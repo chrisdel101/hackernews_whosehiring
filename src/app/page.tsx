@@ -1,95 +1,78 @@
-import Image from "next/image";
-import styles from "./page.module.css";
+import styles from './page.module.css'
+import SearchAppBar from '../components/Appbar'
+import { fetchItemById } from '../apiClient/fetch'
+import { currentMonthID } from '../app/constants'
+import fs from 'fs-extra';
+import he from 'he'
 
-export default function Home() {
+const readFile =  () =>{
+  const file = fs.readFileSync(process.cwd() + '/sample.txt', 'utf8');
+  return file
+}
+
+interface Job {
+  id: string
+  name: string
+  text: string
+  // Add more properties if needed
+}
+
+type JobText = {
+  title: string,
+  descriptions: string[]
+};
+
+const parseJobText = (text: string| undefined) => {
+  const splitText = text?.split('<p>')
+  const title = splitText?.[0]
+  const descriptions = splitText?.slice(1)
+  return {
+    title,
+    descriptions
+  } as JobText;
+}
+
+const fetchAllJobs = async (id: string) => {
+  // console.log('id',id)
+  const data = await fetchItemById(id)
+  // console.log('data',data)
+  let testArr = data.kids.slice(0, 3)
+  const jobs = testArr.map(async (id: string) => {
+    const job = await fetchItemById(id)
+    // console.log(job)
+    return job
+  })
+  return jobs
+}
+export default async function Page() {
+  const jobs: Job[] = await fetchAllJobs(currentMonthID)
   return (
-    <main className={styles.main}>
-      <div className={styles.description}>
-        <p>
-          Get started by editing&nbsp;
-          <code className={styles.code}>src/app/page.tsx</code>
-        </p>
-        <div>
-          <a
-            href="https://vercel.com?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            By{" "}
-            <Image
-              src="/vercel.svg"
-              alt="Vercel Logo"
-              className={styles.vercelLogo}
-              width={100}
-              height={24}
-              priority
-            />
-          </a>
-        </div>
-      </div>
-
-      <div className={styles.center}>
-        <Image
-          className={styles.logo}
-          src="/next.svg"
-          alt="Next.js Logo"
-          width={180}
-          height={37}
-          priority
-        />
-      </div>
-
-      <div className={styles.grid}>
-        <a
-          href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className={styles.card}
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2>
-            Docs <span>-&gt;</span>
-          </h2>
-          <p>Find in-depth information about Next.js features and API.</p>
-        </a>
-
-        <a
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className={styles.card}
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2>
-            Learn <span>-&gt;</span>
-          </h2>
-          <p>Learn about Next.js in an interactive course with&nbsp;quizzes!</p>
-        </a>
-
-        <a
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className={styles.card}
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2>
-            Templates <span>-&gt;</span>
-          </h2>
-          <p>Explore starter templates for Next.js.</p>
-        </a>
-
-        <a
-          href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className={styles.card}
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2>
-            Deploy <span>-&gt;</span>
-          </h2>
-          <p>
-            Instantly deploy your Next.js site to a shareable URL with Vercel.
-          </p>
-        </a>
-      </div>
-    </main>
-  );
+    <div>
+      <SearchAppBar />
+      <main className={styles.main}>
+        {/* <h2 dangerouslySetInnerHTML={{__html: parsedSample.title }}/>
+        <p dangerouslySetInnerHTML={{__html: parsedSample.descriptions[0] }}/>
+        <p dangerouslySetInnerHTML={{__html: parsedSample.descriptions[1] }}/>
+        <p dangerouslySetInnerHTML={{__html: parsedSample.descriptions[2] }}/>
+        <p dangerouslySetInnerHTML={{__html: parsedSample.descriptions[3] }}/>
+        <p dangerouslySetInnerHTML={{__html: parsedSample.descriptions[4] }}/>
+        <p dangerouslySetInnerHTML={{__html: parsedSample.descriptions[5] }}/>
+        <p dangerouslySetInnerHTML={{__html: parsedSample.descriptions[6] }}/> */}
+        
+        {jobs.map(async (jobPromise) => {
+              const job = await jobPromise;
+              const jobText = parseJobText(job.text)
+              return( 
+                <div key={job.id}>
+                  <h2 dangerouslySetInnerHTML={{__html: jobText.title }}/>
+                {jobText.descriptions.map((desc, i) => {
+                  return <p key={i} dangerouslySetInnerHTML={{__html: desc }}/>
+                }
+                )}
+                </div>
+              )
+          })}
+      </main>
+    </div>
+  )
 }
