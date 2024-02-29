@@ -18,16 +18,16 @@ interface Job {
 }
 
 type JobText = {
-  title: string,
+  heading: string,
   descriptions: string[]
 };
 
 const parseJobText = (text: string| undefined) => {
   const splitText = text?.split('<p>')
-  const title = splitText?.[0]
+  const heading = splitText?.[0]
   const descriptions = splitText?.slice(1)
   return {
-    title,
+    heading,
     descriptions
   } as JobText;
 }
@@ -42,36 +42,28 @@ const fetchAllJobs = async (id: string) => {
     // console.log(job)
     return job
   })
-  return jobs
+  
+  return Promise.all(jobs)
 }
 export default async function Page() {
   const jobs: Job[] = await fetchAllJobs(currentMonthID)
   return (
     <div>
       <SearchAppBar />
-      <main className={styles.main}>
-        {/* <h2 dangerouslySetInnerHTML={{__html: parsedSample.title }}/>
-        <p dangerouslySetInnerHTML={{__html: parsedSample.descriptions[0] }}/>
-        <p dangerouslySetInnerHTML={{__html: parsedSample.descriptions[1] }}/>
-        <p dangerouslySetInnerHTML={{__html: parsedSample.descriptions[2] }}/>
-        <p dangerouslySetInnerHTML={{__html: parsedSample.descriptions[3] }}/>
-        <p dangerouslySetInnerHTML={{__html: parsedSample.descriptions[4] }}/>
-        <p dangerouslySetInnerHTML={{__html: parsedSample.descriptions[5] }}/>
-        <p dangerouslySetInnerHTML={{__html: parsedSample.descriptions[6] }}/> */}
-        
-        {jobs.map(async (jobPromise) => {
-              const job = await jobPromise;
-              const jobText = parseJobText(job.text)
-              return( 
-                <div key={job.id}>
-                  <h2 dangerouslySetInnerHTML={{__html: jobText.title }}/>
-                {jobText.descriptions.map((desc, i) => {
-                  return <p key={i} dangerouslySetInnerHTML={{__html: desc }}/>
-                }
-                )}
-                </div>
-              )
-          })}
+      <main className={`${styles.main} ${styles['jobs-container']}`}>        
+        {jobs.map(job => {
+          let parsedJob = parseJobText(job.text)
+          return (
+            <div key={job.id} className={styles['job-container']}>
+              <h3 className={styles['job-heading']} dangerouslySetInnerHTML={{__html: parsedJob.heading}}/>
+              <div className={styles['job-description-container']}>
+                {parsedJob.descriptions.map((description, index) => {
+                  return <p key={index}className={styles['job-description']}dangerouslySetInnerHTML={{__html: description}}/>
+                })}
+              </div>
+            </div>
+          )
+        })}
       </main>
     </div>
   )
