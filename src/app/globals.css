@@ -88,7 +88,7 @@ body {
   overflow-x: hidden;
 }
 
-body {
+.layout {
   color: rgb(var(--foreground-rgb));
   background: linear-gradient(
       to bottom,

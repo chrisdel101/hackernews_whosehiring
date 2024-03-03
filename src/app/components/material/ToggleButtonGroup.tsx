@@ -6,6 +6,7 @@ interface IProps {
     filter?: string | null 
     handleFilter?: (event: React.MouseEvent<HTMLElement>, newFilter: string | null) => void
 }
+
 export default function ToggleButtons({filter, handleFilter}: IProps) {
 
   return (
