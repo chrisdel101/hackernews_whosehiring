@@ -31,26 +31,43 @@ type Job = {
       descriptions,
     } as JobText;
   }
-  const timeStampFilter = (jobs: Job[]) => {
-    jobs.sort((a, b) => {
+  const sortJobsNewest = (jobs: Job[]) => {
+    const copyJobs =    [...jobs]   
+    return copyJobs.sort((a, b) => {
         return a.time - b.time
     })
-    
   }
-const handleFilter = (event: React.MouseEvent<HTMLElement>, newFilter: string | null) => {
-    console.log('newFilter', newFilter)
-}
-// pass in the jobs array for the month
-export default function JobsList({jobs}: IProps) {
-    const [filter, setFilter] = useState<Filters | null>(null)
+  const sortJobsOldest = (jobs: Job[]) => {
+    const copyJobs =    [...jobs] 
+    return copyJobs.sort((a, b) => {
+        return b.time - a.time
+    })
+  }
+  // pass in the jobs array for the month
+  export default function JobsList({jobs}: IProps) {
+      const [filter, setFilter] = useState<Filters | null>(null)
+      const [sortedJobs, setSortedJobs] = useState<Job[]>([...jobs])
+      const handleFilter = (event: React.MouseEvent<HTMLElement>, newFilter: string | null) => {
+         if(newFilter === Filters.NEWEST) {
+            setFilter(Filters.NEWEST)
+            setSortedJobs(sortJobsNewest(jobs))
+         } else if(newFilter === Filters.OLDEST) {
+               setFilter(Filters.OLDEST)
+               setSortedJobs(sortJobsOldest(jobs))
+         } else if(newFilter === Filters.COUNTRY) {
+               setFilter(Filters.COUNTRY)
+         } else if(newFilter === Filters.RESET) {
+             setFilter(null)
+             setSortedJobs(jobs)
+         }
+      }
     return(
     <main className={`${styles['jobs-list-container']}`}>   
         <ToggleButtons handleFilter={handleFilter} filter={filter}/>     
-        {jobs.map(job => {
+        {sortedJobs.map(job => {
             let parsedJob = parseJobText
             (job.text)
             const parsedTime = parseTimeStamp(job.time)
-            console.log('parsedTime', parsedTime)
             return (
             <div key={job.id} className={styles['job-accordion-container']}>
                 <AppAccordion heading={parsedJob.heading} descriptions={parsedJob.descriptions}
