@@ -1,9 +1,17 @@
 import styles from './page.module.css'
 import { fetchItemById } from '../apiClient/fetch'
-import { currentMonthID } from '../app/constants'
-import JobsList from './components/page_sections/JobsList'
+import { currentMonthID, currentMonthIndex, Years, YearsIndex, Months, MonthsIndex, currentYearIndex } from '../app/constants'
+import JobsList from './components/client/JobsList'
 import SearchAppBar from './components/material/Appbar'
+import { redirect } from 'next/navigation'
+import { verifyParams } from './utils'
 
+export interface URLParams {
+  params: {
+    year: Years | YearsIndex
+    month: Months | MonthsIndex
+  }
+}
 
 const fetchAllJobs = async (id: string) => {
   const data = await fetchItemById(id)
@@ -16,13 +24,15 @@ const fetchAllJobs = async (id: string) => {
   // })
   return Promise.all(jobs)
 }
-export default async function Page() {
-  return (
-    <div className="layout">
-      <SearchAppBar />
-      <main className={`${styles.main}`}>
-        <JobsList jobs={await fetchAllJobs(currentMonthID)}/>
-      </main>
-    </div>
-  )
+const handleChange = (event: React.MouseEvent<HTMLElement>, newMonth: string | null) => {
+  console.log('newMonth', newMonth)
+}
+export default async function Page({params}: URLParams) {
+  if(verifyParams(params?.year, params?.month)) {
+    console.log('HERE1')
+    redirect(`/${params.year}/${params.month}`)    
+  } else {
+    console.log('HERE2')
+    redirect(`/${currentYearIndex}/${currentMonthIndex}`)
+  }
 }

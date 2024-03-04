@@ -16,14 +16,15 @@ import { Years, Months, currentMonthIndex, currentYearIndex } from '@/app/consta
 
 interface IProps {
   width?: string;
-  values: (Months | Years);
+  values: Months | Years;
   defaultValueIndex: number;
+  handleChange?: (event: any) => void;
 }
 
-export default function AppSelect({ width, values, defaultValueIndex }: IProps) {
-  console.log('values', values)
+export default function AppSelect({ width, values, defaultValueIndex, handleChange }: IProps) {
+  console.log('handleChange select', handleChange)
   return (
-    <Select defaultValue={Object.values(values)[defaultValueIndex]} sx={{width: width}}>
+    <Select defaultValue={Object.values(values)[defaultValueIndex]} sx={{width: width}} onChange={handleChange}>
       {Object.values(values)?.map((value, i) => {
         return <Option key={i} value={value}>{value}</Option>;
       })}

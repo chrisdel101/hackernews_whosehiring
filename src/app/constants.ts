@@ -8,6 +8,7 @@ export const navTitleLarge = "Hacker News Whose Hiring"
 export const navTitleXS = "HN"
 export const currentMonthIndex = 1
 export const currentYearIndex = 4
+
 export enum Filters {
     NEWEST = "newest",
     OLDEST = "oldest",
@@ -28,10 +29,32 @@ export enum Months {
     NOVEMBER = "November",
     DECEMBER = "December"
 }
+export enum MonthsIndex {
+    JANUARY = 1,
+    FEBRUARY = 2,
+    MARCH = 3,
+    APRIL = 4,
+    MAY = 5,
+    JUNE = 6,
+    JULY = 7,
+    AUGUST = 8,
+    SEPTEMBER = 9,
+    OCTOBER = 10,
+    NOVEMBER = 11,
+    DECEMBER = 12  
+}
+
 export enum Years {
     TWENTY = "2020",
     TWENTY_ONE = "2021",
     TWENTY_TWO = "2022",
     TWENTY_THREE = "2023",
     TWENTY_FOUR = "2024"   
+}
+export enum YearsIndex {
+    TWENTY = 0,
+    TWENTY_ONE = 1,
+    TWENTY_TWO = 2,
+    TWENTY_THREE = 3,
+    TWENTY_FOUR =  4
 }
