@@ -7,7 +7,6 @@ import AccordionDetails from '@mui/material/AccordionDetails';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import { parseTimeStamp } from '@/app/utils'
 import styles from '../../page.module.css'
-import { useEffect } from 'react';
 
 interface IProps {
     heading: string;

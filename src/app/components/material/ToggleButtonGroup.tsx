@@ -23,9 +23,6 @@ export default function ToggleButtons({filter, handleFilter}: IProps) {
       <ToggleButton value={Filters.OLDEST} aria-label="date oldest">
        Date Oldest 
       </ToggleButton>
-      <ToggleButton value={Filters.COUNTRY} aria-label="country">
-      Country
-      </ToggleButton>
       <ToggleButton value={Filters.RESET} aria-label="reset">
        X
       </ToggleButton>

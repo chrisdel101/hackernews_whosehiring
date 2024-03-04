@@ -34,13 +34,13 @@ type Job = {
   const sortJobsNewest = (jobs: Job[]) => {
     const copyJobs =    [...jobs]   
     return copyJobs.sort((a, b) => {
-        return a.time - b.time
+        return b.time - a.time
     })
   }
   const sortJobsOldest = (jobs: Job[]) => {
     const copyJobs =    [...jobs] 
     return copyJobs.sort((a, b) => {
-        return b.time - a.time
+        return a.time - b.time
     })
   }
   // pass in the jobs array for the month
@@ -54,8 +54,6 @@ type Job = {
          } else if(newFilter === Filters.OLDEST) {
                setFilter(Filters.OLDEST)
                setSortedJobs(sortJobsOldest(jobs))
-         } else if(newFilter === Filters.COUNTRY) {
-               setFilter(Filters.COUNTRY)
          } else if(newFilter === Filters.RESET) {
              setFilter(null)
              setSortedJobs(jobs)

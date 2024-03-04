@@ -1,5 +1,5 @@
 :root {
-  --max-width: 1100px;
+  --max-width: 1200px;
   --border-radius: 12px;
   --font-mono: ui-monospace, Menlo, Monaco, "Cascadia Mono", "Segoe UI Mono",
     "Roboto Mono", "Oxygen Mono", "Ubuntu Monospace", "Source Code Pro",
@@ -90,7 +90,8 @@ body {
 
 .layout {
   color: rgb(var(--foreground-rgb));
-  background-color: #F5F5F5
+  background-color: #F5F5F5;
+  max-width: var(--max-width);
 }
 
 a {

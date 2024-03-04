@@ -6,8 +6,12 @@ import Box from '@mui/material/Box';
 import Toolbar from '@mui/material/Toolbar';
 import Typography from '@mui/material/Typography';
 import InputBase from '@mui/material/InputBase';
+import useMediaQuery from '@mui/material/useMediaQuery';
 import SearchIcon from '@mui/icons-material/Search';
-import { navTitle } from '@/app/constants';
+import AppSelect from './Select';
+import { navTitleLarge, navTitleXS, Months, Years, currentMonthIndex, currentYearIndex } from '@/app/constants';
+
+
 const Search = styled('div')(({ theme }) => ({
   position: 'relative',
   borderRadius: theme.shape.borderRadius,
@@ -51,6 +55,8 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
 }));
 
 export default function SearchAppBar() {
+
+  const isXs = useMediaQuery('(max-width:600px)');
   return (
     <Box sx={{ flexGrow: 1 }}>
       <AppBar position="static" sx={{bgcolor: "#ff6600"}}>
@@ -59,19 +65,16 @@ export default function SearchAppBar() {
             variant="h6"
             noWrap
             component="div"
-            sx={{ flexGrow: 1, display: { xs: 'none', sm: 'block' } }}
+            sx={{ flexGrow: 1}}
           >
-           {navTitle}
+        {isXs ? navTitleXS
+          : navTitleLarge
+        }
           </Typography>
-          <Search>
-            <SearchIconWrapper>
-              <SearchIcon />
-            </SearchIconWrapper>
-            <StyledInputBase
-              placeholder="Search…"
-              inputProps={{ 'aria-label': 'search' }}
-            />
-          </Search>
+        
+          <AppSelect width={"100px"} values={Months} defaultValueIndex={currentMonthIndex}/>
+          <AppSelect width={"50px"} values={Years} defaultValueIndex={currentYearIndex}/>
+          {/* <AppSelect/> */}
         </Toolbar>
       </AppBar>
     </Box>

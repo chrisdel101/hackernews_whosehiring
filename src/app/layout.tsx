@@ -1,7 +1,6 @@
 import { Inter } from "next/font/google";
 import "./globals.css";
 import { AppRouterCacheProvider } from '@mui/material-nextjs/v13-appRouter';
-import SearchAppBar from './components/material/Appbar'
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -14,8 +13,7 @@ export default function RootLayout({
     <html lang="en">
       <AppRouterCacheProvider>
       <body className={inter.className}>
-        <div className="layout">
-        <SearchAppBar/>
+        <div>
         {children}   
         </div>
        </body>
