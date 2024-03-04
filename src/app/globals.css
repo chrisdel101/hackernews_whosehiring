@@ -88,10 +88,10 @@ body {
   overflow-x: hidden;
 }
 
-.layout {
+.root-layout {
   color: rgb(var(--foreground-rgb));
   background-color: #F5F5F5;
-  max-width: var(--max-width);
+  /* max-width: var(--max-width); */
 }
 
 a {

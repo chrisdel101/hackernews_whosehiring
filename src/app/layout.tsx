@@ -13,7 +13,7 @@ export default function RootLayout({
     <html lang="en">
       <AppRouterCacheProvider>
       <body className={inter.className}>
-        <div>
+        <div className="root-layout">
         {children}   
         </div>
        </body>
