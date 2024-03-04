@@ -29,8 +29,8 @@ export default function AppAccordion({heading, descriptions, timeString}: IProps
           </div>
         </AccordionSummary>
         <AccordionDetails className={styles['job-description-container']}>
-        {descriptions.map((description, index) => {
-          return <p key={index}
+        {descriptions?.map((description, index) => {
+          return <div key={index}
           dangerouslySetInnerHTML={{__html: description}}/>
           })}
         </AccordionDetails>

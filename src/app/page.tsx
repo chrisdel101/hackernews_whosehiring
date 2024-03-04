@@ -10,16 +10,11 @@ const readFile =  () =>{
 }
 
 const fetchAllJobs = async (id: string) => {
-  // console.log('id',id)
   const data = await fetchItemById(id)
-  // console.log('data',data)
-  let testArr = data.kids.slice(0, 10)
-  const jobs = testArr.map(async (id: string) => {
+  const jobs = data.kids.map(async (id: string) => {
     const job = await fetchItemById(id)
-    console.log('fetchAllJobs job', job)
     return job
   })
-  
   return Promise.all(jobs)
 }
 export default async function Page() {

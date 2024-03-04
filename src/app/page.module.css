@@ -28,7 +28,7 @@
   max-width: 100%;
   word-wrap: break-word;
 }
-.job-description-container > p{
+.job-description-container > div, .job-description-container pre {
   margin-bottom: 5px;
 }
 .description {
