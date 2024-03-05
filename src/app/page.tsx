@@ -2,7 +2,7 @@ import styles from './page.module.css'
 import { fetchItemById } from '../apiClient/fetch'
 import { currentMonthID, currentMonthIndex, Years, YearsIndex, Months, MonthsIndex, currentYearIndex } from '../app/constants'
 import JobsList from './components/client/JobsList'
-import SearchAppBar from './components/material/Appbar'
+import AppBar from './components/material/NavAppBar'
 import { redirect } from 'next/navigation'
 import { verifyParams } from './utils'
 

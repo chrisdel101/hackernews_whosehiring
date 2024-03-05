@@ -1,17 +1,18 @@
 'use client'
-import SearchAppBar from '../material/Appbar'
+import NavAppBar from '../material/NavAppBar'
 import styles from '../../page.module.css'
-const redirect = (param: any) => {
-  console.log('redirect', param)
-}
 export const Layout = ({
   children,
 }: Readonly<{
   children: React.ReactNode
 }>) => {
+  const redirect = (param: any) => {
+    console.log('redirect', param)
+    console.log('redirect', param?.target?.value)
+  }
   return (
     <div>
-      <SearchAppBar handleChange={redirect} />
+      <NavAppBar handleChange={redirect} />
       <div className={styles.main}>
         {children}
       </div>

@@ -3,7 +3,7 @@ import styles from '../../page.module.css'
 import { fetchItemById } from '../../../apiClient/fetch'
 import { currentMonthID } from '@/app/constants'
 import JobsList from '../../components/client/JobsList'
-import SearchAppBar from '../../components/material/Appbar'
+import AppBar from '../../components/material/NavAppBar'
 import { URLParams } from '@/app/page'
 
 const fetchAllJobs = async (id: string) => {
