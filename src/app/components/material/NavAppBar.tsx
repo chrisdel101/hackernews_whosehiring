@@ -15,13 +15,20 @@ import {
   Years,
   currentMonthIndex,
   currentYearIndex,
+  currentMonthKey,
+  currentYearKey
 } from '@/app/constants'
+import { useState } from 'react'
 
 interface IProps {
   handleChange: any
+  params: URLParams
 }
 
-export default function NavAppBar({ handleChange }: IProps) {
+export default function NavAppBar({ handleChange, params }: IProps) {
+  // console.log('params', Months?.[`${params.currentMonth}`])
+  // const [monthIndex, setMonthIndex] = useState<number>(cprurrentMonthIndex)
+  // const [yearIndex, setYearIndex] = useState<number>(currentYearIndex)
   const isXs = useMediaQuery('(max-width:600px)')
   return (
     <Box sx={{ flexGrow: 1 }}>
@@ -44,14 +51,14 @@ export default function NavAppBar({ handleChange }: IProps) {
           <AppSelect
             width={'100px'}
             values={Months}
-            defaultValueIndex={currentMonthIndex}
+            defaultValue={Object.keys(Months)[Object.values(Months).indexOf(params.currentMonth)]}
             handleChangeProp={handleChange}
             labelText="Select Month"
           />
           <AppSelect
             width={'50px'}
             values={Years}
-            defaultValueIndex={currentYearIndex}
+            defaultValue={Object.keys(Years)[Object.values(Years).indexOf(params.currentYear)]}
             handleChangeProp={handleChange}
             labelText="Select Year"
           />

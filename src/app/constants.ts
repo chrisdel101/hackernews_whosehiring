@@ -1,5 +1,7 @@
  
 export const endPoint = "https://hacker-news.firebaseio.com/v0/"
+ 
+export const whoseHiring = "user/whoishiring.json?print=pretty"
 
 export const currentMonthID = "39217310"
 // https://hacker-news.firebaseio.com/v0/item/39217310.json
@@ -8,6 +10,10 @@ export const navTitleLarge = "Hacker News Whose Hiring"
 export const navTitleXS = "HN"
 export const currentMonthIndex = 1
 export const currentYearIndex = 4
+export const currentMonthKey =  "MARCH"
+export const currentYearKey =  "TWENTY_FOUR"
+
+export const whoseHiringTitle = "Ask HN: Who is hiring?"
 
 export enum Filters {
     NEWEST = "newest",
@@ -29,19 +35,19 @@ export enum Months {
     NOVEMBER = "November",
     DECEMBER = "December"
 }
-export enum MonthsIndex {
-    JANUARY = 1,
-    FEBRUARY = 2,
-    MARCH = 3,
-    APRIL = 4,
-    MAY = 5,
-    JUNE = 6,
-    JULY = 7,
-    AUGUST = 8,
-    SEPTEMBER = 9,
-    OCTOBER = 10,
-    NOVEMBER = 11,
-    DECEMBER = 12  
+export enum MonthsNumber {
+    JANUARY = "1",
+    FEBRUARY = "2",
+    MARCH = "3",
+    APRIL = "4",
+    MAY = "5",
+    JUNE = "6",
+    JULY = "7",
+    AUGUST = "8",
+    SEPTEMBER = "9",
+    OCTOBER = "10",
+    NOVEMBER = "11",
+    DECEMBER = "12"  
 }
 
 export enum Years {
@@ -51,10 +57,11 @@ export enum Years {
     TWENTY_THREE = "2023",
     TWENTY_FOUR = "2024"   
 }
-export enum YearsIndex {
-    TWENTY = 0,
-    TWENTY_ONE = 1,
-    TWENTY_TWO = 2,
-    TWENTY_THREE = 3,
-    TWENTY_FOUR =  4
+export enum YearsNumber {
+    NINETEEN = "19",
+    TWENTY = "20",
+    TWENTY_ONE = "21",
+    TWENTY_TWO = "22",
+    TWENTY_THREE = "23",
+    TWENTY_FOUR =  "24"
 }

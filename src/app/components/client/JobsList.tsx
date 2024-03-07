@@ -8,7 +8,7 @@ import { parseTimeStamp, parseJobText, sortJobsNewest, sortJobsOldest } from '@/
 import {Job, JobText} from '@/app/types'
 import { Layout } from './Layout' // Fixed import statement
 interface IProps {
-  jobs: Job[]
+  jobs: Job []
 }
 
   const handleChange = (route: string) => {
@@ -31,9 +31,9 @@ interface IProps {
              setSortedJobs(jobs)
          }
       }
+    console.log('sortedJobs', sortedJobs)
     return(
       <Layout>  
-        {/* <div>Hello</div> */}
       <main className={`${styles['jobs-list-container']}`}>   
           <ToggleButtons handleFilter={handleFilter} filter={filter}/>     
           {sortedJobs.map(job => {

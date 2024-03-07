@@ -1,14 +1,22 @@
-import {Years, YearsIndex, Months, MonthsIndex} from './constants'
-import {Job, JobText} from '@/app/types'
+import { timeStamp } from 'console';
+import {Years, YearsNumber, Months, MonthsNumber} from './constants'
+import {Job, JobText, Post, User} from '@/app/types'
+import { fetchItemById } from '@/apiClient/fetch';
 
 export const parseTimeStamp = (time: number) => {
     let date = new Date(time * 1000)
     let options = { timeZone: 'UTC' }; 
     return date.toLocaleDateString('en-US', options)
   }
-export const verifyParams = (year: Years|YearsIndex, month: Months|MonthsIndex) => {
+// confirm params are part of the Years/Months sets
+export const verifyInputIsMonthYear = (year: Years|YearsNumber, month: Months|MonthsNumber) => {
+  // console.log(Object.keys(Months))
+  // console.log(Object.keys(YearsNumber))
+  // console.log('year', year, Object.values(YearsNumber).includes(year), Object.keys(YearsNumber))
   if(
-    (Object.values(Years).includes(year as Years) || Object.values(YearsIndex).includes(year)) && Object.values(Months).includes(month as Months) || Object.values(MonthsIndex).includes(month)) {
+    (Object.values(Years).includes(year as Years) || Object.values(YearsNumber).includes(year as YearsNumber)) && Object.values(Months).includes(month as Months) || Object.values(MonthsNumber).includes(month as MonthsNumber)) {
+      console.log('month OK', month)
+      console.log('year OK', year)
       return true
     }
   return false
@@ -33,4 +41,68 @@ export const sortJobsOldest = (jobs: Job[]) => {
   return copyJobs.sort((a, b) => {
       return a.time - b.time
   })
+}
+// check if post is Whose Hiring
+export const isHiringPost = (post: Post) => {
+  // check for exact match
+  if(post.title.toLowerCase() === `Ask HN: Who is hiring?`.toLowerCase()) {
+    return true
+    // check for partial match
+  } else if(post.title.toLowerCase().includes('hiring')) {
+    return true
+  }
+}
+export const findMatchingPost = async (year: YearsNumber, month: MonthsNumber, userData: User) => {
+  const {submitted} = userData
+  // get matching year name to number
+  const yearValueIndex = Object.values(YearsNumber).indexOf(year)
+  const yearKey = Object.keys(YearsNumber)[yearValueIndex]
+  const fourDigitYear = Years[yearKey as keyof typeof Years]
+    // get matching month name to number
+  const monthValueIndex = Object.values(MonthsNumber).indexOf(month)
+  const monthKey = Object.keys(MonthsNumber)[monthValueIndex]
+  const monthName = Months[monthKey as keyof typeof Months]
+
+  for (let index = 0; index < 20; index++) {
+    const element = submitted[index].toString();
+    // console.log('element', element)
+  //   // check timeStamp
+    const item = await fetchItemById(element)
+    // console.log('year', year, 'month', month)
+    // console.log('item.time', item.time * 1000)
+    // console.log('item.time xx', new Date(item.time * 1000).toDateString())
+    if(compareTimeStamp(item.time , fourDigitYear, month)) {
+      // check if post is Whose Hiring
+      if(item?.title.toLowerCase().includes('hiring')) {
+        return item
+      }
+    }
+  }
+
+  // const currentMonth = Object.keys(Months)[MonthsNumber] 
+  
+  
+  // }
+}
+export const compareTimeStamp = (timeStamp: number, year: Years, month: MonthsNumber) => {
+  // const incrementMonth = (Number(month) + 1) % 12 
+  const startDate = new Date(`${month} 1, ${year}`).getTime() / 1000; // Convert milliseconds to seconds
+  const nextMonthDate = new Date(`${month} 1, ${year}`);
+  // increment month including to next year 
+  nextMonthDate.setMonth(nextMonthDate.getMonth() + 1); // Move to the next month
+  console.log('nextMonthDate', nextMonthDate)
+  const endDate = nextMonthDate.getTime() / 1000;
+ if(timeStamp >= startDate && timeStamp < endDate) {
+  console.log('XXXX')
+  return true
+ }
+ return false
+}
+export const parsePathName = (pathname: string) => {
+  const splitPath = pathname.split('/')
+  // ignore splitpath[0]
+  return {
+    year: splitPath?.[1],
+    month: splitPath?.[2]
+  }
 }

@@ -4,10 +4,11 @@ import InputLabel from '@mui/material/InputLabel'
 import MenuItem from '@mui/material/MenuItem'
 import FormControl from '@mui/material/FormControl'
 import Select, { SelectChangeEvent } from '@mui/material/Select'
+import { Years,currentYearKey } from '@/app/constants'
 interface IProps {
   width?: string
   values: Months | Years
-  defaultValueIndex: number
+  defaultValue: keyof Months | keyof Years
   handleChangeProp?: (event: SelectChangeEvent) => void
   labelText?: string
 }
@@ -15,18 +16,15 @@ interface IProps {
 export default function AppSelect({
   width,
   values,
-  defaultValueIndex,
+  defaultValue,
   handleChangeProp,
   labelText
 }: IProps) {
-  console.log('handleChangeProp', handleChangeProp)
-
-  const [age, setAge] = React.useState('')
-
-  const handleChange = (event: SelectChangeEvent) => {
-    console.log('event', event?.target?.value)
-    setAge(event.target.value as string)
-  }
+  
+  // console.log('values',values)
+  // console.log('value', values?.[`${defaultValue}`])
+  // console.log('handleChangeProp', handleChangeProp)
+  
 
   return (
     <Box sx={{ minWidth: 120, 
@@ -39,16 +37,18 @@ export default function AppSelect({
         }}>
       <FormControl fullWidth>
         <InputLabel className="select-label">{labelText}</InputLabel>
+        {/* default values is index number of enum list */}
         <Select
           labelId="simple-select-label"
           className="simple-select"
-          value={Object.values(values)[defaultValueIndex] as string}
+          value={defaultValue}
           onChange={handleChangeProp}
          
         >
-          {Object.values(values)?.map((value, i) => {
+          {/* values are enum keys */}
+          {Object.entries(values)?.map((pair, i) => {
             return (
-              <MenuItem  key={i} value={value as string}>{value as string}</MenuItem>
+              <MenuItem  key={i} value={pair[0] as string}>{pair[1] as string}</MenuItem>
             )
           })}
         </Select>

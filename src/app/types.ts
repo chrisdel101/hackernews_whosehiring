@@ -10,3 +10,21 @@ export type Job = {
     text: string
     time: number
   }
+export type Post = {
+    by: string
+    id: number
+    kids: number[]
+    score: number
+    time: number
+    title: string
+    type: string
+    url: string
+}
+export type User = {
+    about: string,
+    created: number,
+    delay: number,
+    id:string,
+    karma: number,
+    submitted: number[]
+}
