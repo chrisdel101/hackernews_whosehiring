@@ -31,18 +31,18 @@ interface IProps {
              setSortedJobs(jobs)
          }
       }
-    console.log('sortedJobs', sortedJobs)
+    // console.log('sortedJobs', sortedJobs)
     return(
       <Layout>  
       <main className={`${styles['jobs-list-container']}`}>   
           <ToggleButtons handleFilter={handleFilter} filter={filter}/>     
           {sortedJobs.map(job => {
               let parsedJob = parseJobText
-              (job.text)
-              const parsedTime = parseTimeStamp(job.time)
+              (job?.text)
+              const parsedTime = parseTimeStamp(job?.time)
               return (
-              <div key={job.id} className={styles['job-accordion-container']}>
-                  <AppAccordion heading={parsedJob.heading} descriptions={parsedJob.descriptions}
+              <div key={job?.id} className={styles['job-accordion-container']}>
+                  <AppAccordion heading={parsedJob?.heading} descriptions={parsedJob?.descriptions}
                   timeString={parsedTime}/>                 
               </div>
               )

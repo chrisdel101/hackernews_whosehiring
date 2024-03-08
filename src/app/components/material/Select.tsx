@@ -4,7 +4,7 @@ import InputLabel from '@mui/material/InputLabel'
 import MenuItem from '@mui/material/MenuItem'
 import FormControl from '@mui/material/FormControl'
 import Select, { SelectChangeEvent } from '@mui/material/Select'
-import { Years,currentYearKey } from '@/app/constants'
+import { Months, Years,currentYearKey } from '@/app/constants'
 interface IProps {
   width?: string
   values: Months | Years
@@ -41,7 +41,7 @@ export default function AppSelect({
         <Select
           labelId="simple-select-label"
           className="simple-select"
-          value={defaultValue}
+          value={defaultValue as string}
           onChange={handleChangeProp}
          
         >

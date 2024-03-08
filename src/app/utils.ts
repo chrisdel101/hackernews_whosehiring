@@ -52,18 +52,10 @@ export const isHiringPost = (post: Post) => {
     return true
   }
 }
-export const findMatchingPost = async (year: YearsNumber, month: MonthsNumber, userData: User) => {
+export const findMatchingPost = async (year: Years, month: MonthsNumber, userData: User) => {
   const {submitted} = userData
-  // get matching year name to number
-  const yearValueIndex = Object.values(YearsNumber).indexOf(year)
-  const yearKey = Object.keys(YearsNumber)[yearValueIndex]
-  const fourDigitYear = Years[yearKey as keyof typeof Years]
-    // get matching month name to number
-  const monthValueIndex = Object.values(MonthsNumber).indexOf(month)
-  const monthKey = Object.keys(MonthsNumber)[monthValueIndex]
-  const monthName = Months[monthKey as keyof typeof Months]
-
-  for (let index = 0; index < 20; index++) {
+  
+  for (let index = 0; index < submitted.length; index++) {
     const element = submitted[index].toString();
     // console.log('element', element)
   //   // check timeStamp
@@ -71,7 +63,7 @@ export const findMatchingPost = async (year: YearsNumber, month: MonthsNumber, u
     // console.log('year', year, 'month', month)
     // console.log('item.time', item.time * 1000)
     // console.log('item.time xx', new Date(item.time * 1000).toDateString())
-    if(compareTimeStamp(item.time , fourDigitYear, month)) {
+    if(compareTimeStamp(item.time , year, month)) {
       // check if post is Whose Hiring
       if(item?.title.toLowerCase().includes('hiring')) {
         return item
@@ -93,7 +85,7 @@ export const compareTimeStamp = (timeStamp: number, year: Years, month: MonthsNu
   console.log('nextMonthDate', nextMonthDate)
   const endDate = nextMonthDate.getTime() / 1000;
  if(timeStamp >= startDate && timeStamp < endDate) {
-  console.log('XXXX')
+  // console.log('XXXX')
   return true
  }
  return false
@@ -103,6 +95,18 @@ export const parsePathName = (pathname: string) => {
   // ignore splitpath[0]
   return {
     year: splitPath?.[1],
-    month: splitPath?.[2]
+    monthNumber: splitPath?.[2]
   }
+}
+export const getMonthKeyFromNumber = (monthNumber:  string) => {
+  const index = Object.values(MonthsNumber).indexOf(monthNumber as MonthsNumber)
+  const month = Object.keys(MonthsNumber)[index]
+  return month
+}
+export const getMontNumberFromName = (month:  Months) => {
+  var monthKey = Object.keys(Months)[Object.values(Months).indexOf(month)]
+  console.log('monthKey', monthKey)
+  const monthNumber = MonthsNumber[monthKey as keyof typeof MonthsNumber] 
+  console.log('monthNumber', monthNumber)
+  return monthNumber
 }

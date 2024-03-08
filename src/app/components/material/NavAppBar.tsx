@@ -26,7 +26,7 @@ interface IProps {
 }
 
 export default function NavAppBar({ handleChange, params }: IProps) {
-  // console.log('params', Months?.[`${params.currentMonth}`])
+  console.log('nav params', params)
   // const [monthIndex, setMonthIndex] = useState<number>(cprurrentMonthIndex)
   // const [yearIndex, setYearIndex] = useState<number>(currentYearIndex)
   const isXs = useMediaQuery('(max-width:600px)')
@@ -47,7 +47,7 @@ export default function NavAppBar({ handleChange, params }: IProps) {
           <Typography variant="h6" noWrap component="div" sx={{ flexGrow: 1 }}>
             {isXs ? navTitleXS : navTitleLarge}
           </Typography>
-
+          {/* default value uses value to get key */}
           <AppSelect
             width={'100px'}
             values={Months}
