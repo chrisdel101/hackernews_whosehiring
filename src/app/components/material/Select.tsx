@@ -5,11 +5,13 @@ import MenuItem from '@mui/material/MenuItem'
 import FormControl from '@mui/material/FormControl'
 import Select, { SelectChangeEvent } from '@mui/material/Select'
 import { Months, Years,currentYearKey } from '@/app/constants'
+import { MonthKey, YearKey } from '@/app/types'
+import { ReactNode } from 'react'
 interface IProps {
   width?: string
-  values: Months | Years
-  defaultValue: keyof Months | keyof Years
-  handleChangeProp?: (event: SelectChangeEvent) => void
+  values: typeof Months | typeof Years
+  defaultValue: MonthKey | YearKey
+  handleChangeProp?: ((event: SelectChangeEvent<string>, child: ReactNode) => void)
   labelText?: string
 }
 

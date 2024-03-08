@@ -6,18 +6,6 @@ import { URLParams } from '@/app/page'
 import { findMatchingPost, verifyInputIsMonthYear } from '@/app/utils'
 import { Job, Post } from '@/app/types'
 
-const fetchAllJobsByPostID = async (id: string) => {
-  const data = await fetchItemById(id)
-  console.log('data', data)
-  // const jobs = data.kids.m ap(async (id: string) => {
-    const job = await fetchItemById(data.kids[0])
-    console.log(job)
-    return Promise.all([job])
-
-  // })
-  return Promise.all(jobs)
-}
-
 const fetchAllJobsByPost = async (post: Post) => {
 
   const jobs = post.kids.map(async (id: number) => {
@@ -26,7 +14,7 @@ const fetchAllJobsByPost = async (post: Post) => {
   })
   return Promise.all(jobs)
 }
-export const fetchXposts = async (post: Post, numToReturn: number) => {
+const fetchXposts = async (post: Post, numToReturn: number) => {
   console.log('post', post)
   const jobs: Job[] = []
   for (let index = 0; index < numToReturn; index++) {

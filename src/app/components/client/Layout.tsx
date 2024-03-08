@@ -1,10 +1,10 @@
 'use client'
 import NavAppBar from '../material/NavAppBar'
 import styles from '../../page.module.css'
-import { useRouter, usePathname } from 'next/navigation'
-import { Months, MonthsNumber, Years, currentMonthIndex, currentYearIndex } from '@/app/constants'
-import { useState } from 'react'
+
+import { Months, Years } from '@/app/constants'
 import { useHandleRedirect } from './useHandleRedirect'
+import { SelectChangeEvent } from '@mui/material'
 
 
 export const Layout = ({
@@ -41,8 +41,8 @@ export const Layout = ({
 //     router.push(newPath)
 //   }
 // }
-   const handleChange = (event: React.ChangeEvent) => {
-    const value = event?.target?.value
+   const handleChange = (event: SelectChangeEvent) => {
+    const value = (event?.target as HTMLInputElement)?.value;
     
     if (Months[value as keyof typeof Months]) {
         setCurrentMonth(Months[value as keyof typeof Months]);

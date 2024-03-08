@@ -1,6 +1,6 @@
 import { timeStamp } from 'console';
 import {Years, YearsNumber, Months, MonthsNumber} from './constants'
-import {Job, JobText, Post, User} from '@/app/types'
+import {Job, JobText, MonthKey, Post, User} from '@/app/types'
 import { fetchItemById } from '@/apiClient/fetch';
 
 export const parseTimeStamp = (time: number) => {
@@ -100,8 +100,8 @@ export const parsePathName = (pathname: string) => {
 }
 export const getMonthKeyFromNumber = (monthNumber:  string) => {
   const index = Object.values(MonthsNumber).indexOf(monthNumber as MonthsNumber)
-  const month = Object.keys(MonthsNumber)[index]
-  return month
+  const monthKey = Object.keys(MonthsNumber)[index] as MonthKey
+  return monthKey
 }
 export const getMontNumberFromName = (month:  Months) => {
   var monthKey = Object.keys(Months)[Object.values(Months).indexOf(month)]

@@ -1,3 +1,4 @@
+import { Months, Years } from "./constants";
 
 export type JobText = {
     heading: string,
@@ -28,3 +29,5 @@ export type User = {
     karma: number,
     submitted: number[]
 }
+export type MonthKey = keyof typeof Months;
+export type YearKey = keyof typeof Years;

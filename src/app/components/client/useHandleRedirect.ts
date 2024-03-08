@@ -1,8 +1,9 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { useRouter, usePathname } from 'next/navigation'
 import { getMontNumberFromName, getMonthKeyFromNumber, parsePathName } from '@/app/utils';
 import { Months, MonthsNumber, Years } from '@/app/constants';
+import { MonthKey } from '@/app/types';
 
 
 export const useHandleRedirect = () => {
@@ -12,8 +13,9 @@ export const useHandleRedirect = () => {
     // console.log('hh', monthNumber, year)
     // console.log('gg', getMonthKeyFromNumber(monthNumber))
     
+    
+    const [currentMonth, setCurrentMonth] = useState<Months>(Months?.[getMonthKeyFromNumber(monthNumber) as MonthKey])
 
-    const [currentMonth, setCurrentMonth] = useState<Months>(Months?.[getMonthKeyFromNumber(monthNumber)] as Months)
     const [currentYear, setCurrentYear] = useState<Years>(year as Years)
 
     useEffect(() => {

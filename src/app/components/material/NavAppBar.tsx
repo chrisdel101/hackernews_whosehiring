@@ -19,16 +19,24 @@ import {
   currentYearKey
 } from '@/app/constants'
 import { useState } from 'react'
+import { MonthKey, YearKey } from '@/app/types'
+import { URLParams } from '@/app/page'
+import { SelectChangeEvent } from '@mui/material'
 
 interface IProps {
-  handleChange: any
-  params: URLParams
+  handleChange: (event: SelectChangeEvent) => void
+  params: {
+    currentMonth: Months
+    currentYear: Years
+  }
 }
 
 export default function NavAppBar({ handleChange, params }: IProps) {
   console.log('nav params', params)
   // const [monthIndex, setMonthIndex] = useState<number>(cprurrentMonthIndex)
   // const [yearIndex, setYearIndex] = useState<number>(currentYearIndex)
+  const monthKey: MonthKey = Object.keys(Months)[Object.values(Months).indexOf(params.currentMonth)] as MonthKey
+  const yearKey: YearKey = Object.keys(Years)[Object.values(Years).indexOf(params.currentYear)] as YearKey
   const isXs = useMediaQuery('(max-width:600px)')
   return (
     <Box sx={{ flexGrow: 1 }}>
@@ -51,14 +59,14 @@ export default function NavAppBar({ handleChange, params }: IProps) {
           <AppSelect
             width={'100px'}
             values={Months}
-            defaultValue={Object.keys(Months)[Object.values(Months).indexOf(params.currentMonth)]}
+            defaultValue={monthKey}
             handleChangeProp={handleChange}
             labelText="Select Month"
           />
           <AppSelect
             width={'50px'}
             values={Years}
-            defaultValue={Object.keys(Years)[Object.values(Years).indexOf(params.currentYear)]}
+            defaultValue={yearKey}
             handleChangeProp={handleChange}
             labelText="Select Year"
           />
