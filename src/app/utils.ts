@@ -82,10 +82,10 @@ export const compareTimeStamp = (timeStamp: number, year: Years, month: MonthsNu
   const nextMonthDate = new Date(`${month} 1, ${year}`);
   // increment month including to next year 
   nextMonthDate.setMonth(nextMonthDate.getMonth() + 1); // Move to the next month
-  console.log('nextMonthDate', nextMonthDate)
+  // console.log('nextMonthDate', nextMonthDate)
   const endDate = nextMonthDate.getTime() / 1000;
  if(timeStamp >= startDate && timeStamp < endDate) {
-  // console.log('XXXX')
+  console.log('found', startDate, endDate, timeStamp)
   return true
  }
  return false

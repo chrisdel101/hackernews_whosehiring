@@ -40,6 +40,7 @@ interface IProps {
               let parsedJob = parseJobText
               (job?.text)
               const parsedTime = parseTimeStamp(job?.time)
+              console.log('job', job)
               return (
               <div key={job?.id} className={styles['job-accordion-container']}>
                   <AppAccordion heading={parsedJob?.heading} descriptions={parsedJob?.descriptions}
