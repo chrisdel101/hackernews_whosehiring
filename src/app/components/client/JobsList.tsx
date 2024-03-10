@@ -1,5 +1,5 @@
 'use client'
-import { use, useEffect, useRef, useState } from 'react'
+import { useEffect, useState } from 'react'
 import styles from '../../page.module.css'
 import AppAccordion from '../material/Accordion'
 import ToggleButtons from '../material/ToggleButtonGroup'
@@ -10,7 +10,7 @@ import {
   sortJobsNewest,
   sortJobsOldest,
 } from '@/app/utils'
-import { Job, JobText, Post } from '@/app/types'
+import { Job, Post } from '@/app/types'
 import { Layout } from './Layout' // Fixed import statement
 import { fetchJobsByBatch } from '@/app/[year]/[month]/page'
 import { InView, useInView } from 'react-intersection-observer'
@@ -79,7 +79,7 @@ export default function JobsList({ firstJobs, post, batchSize, nums }: IProps) {
     const jobs = currentBatch.map((jobId) => fetchItemById(jobId.toString()))
     const _jobs = await Promise.all(jobs)
     console.log('_jobs', _jobs)
-    // setSortedJobs(prevJobs => [...prevJobs, ..._jobs])
+    setSortedJobs(prevJobs => [...prevJobs, ..._jobs])
     // setPostKidsLeft(postKidsLeft.slice(batchSize))
   }
   const fetchAndUpdateJobs = async () => {
@@ -100,10 +100,11 @@ export default function JobsList({ firstJobs, post, batchSize, nums }: IProps) {
     // setSortedJobs(prevJobs => [...prevJobs, ...fetchedJobs])
   }
   useEffect(() => {
-    if(!loaded){
-      fetchNextBatch()
-      setLoaded(true) 
+    if(inView){
+      // if(!loaded){
+        fetchNextBatch()
     }
+    // }
     // if (inView && !loaded) {
     //  setLoaded(true) 
     //  fetchAndUpdateJobs()
@@ -111,7 +112,7 @@ export default function JobsList({ firstJobs, post, batchSize, nums }: IProps) {
     // } else {
     //   console.log("Ref is not in view");
     // }
-  }, []);
+  }, [inView]);
   // useEffect(() => {
   //   console.log('ref', ref)
   //   const observer = new IntersectionObserver((entries) => {
