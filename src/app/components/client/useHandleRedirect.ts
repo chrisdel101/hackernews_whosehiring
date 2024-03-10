@@ -22,7 +22,6 @@ export const useHandleRedirect = () => {
         // console.log('currentMonth', currentMonth)
        // console.log('Months', Months[value as keyof typeof Months]);
        const monthNum = getMontNumberFromName(currentMonth)
-       console.log('QWRQW', monthNum)
        
         router.push(`/${currentYear}/${monthNum}`)
     }, [currentMonth])
@@ -31,7 +30,6 @@ export const useHandleRedirect = () => {
         // console.log('currentYear', currentYear)
         // console.log('currentMonth', currentMonth)
         const monthNum = getMontNumberFromName(currentMonth)
-        console.log('QWRQW', monthNum)
        
         router.push(`/${currentYear}/${monthNum}`)
     }, [currentYear])

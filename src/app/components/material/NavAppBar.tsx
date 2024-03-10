@@ -12,11 +12,7 @@ import {
   navTitleLarge,
   navTitleXS,
   Months,
-  Years,
-  currentMonthIndex,
-  currentYearIndex,
-  currentMonthKey,
-  currentYearKey
+  Years
 } from '@/app/constants'
 import { useState } from 'react'
 import { MonthKey, YearKey } from '@/app/types'
@@ -32,7 +28,7 @@ interface IProps {
 }
 
 export default function NavAppBar({ handleChange, params }: IProps) {
-  console.log('nav params', params)
+  // console.log('nav params', params)
   // const [monthIndex, setMonthIndex] = useState<number>(cprurrentMonthIndex)
   // const [yearIndex, setYearIndex] = useState<number>(currentYearIndex)
   const monthKey: MonthKey = Object.keys(Months)[Object.values(Months).indexOf(params.currentMonth)] as MonthKey

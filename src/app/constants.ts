@@ -8,10 +8,6 @@ export const currentMonthID = "39217310"
 
 export const navTitleLarge = "Hacker News Whose Hiring"
 export const navTitleXS = "HN"
-export const currentMonthIndex = 1
-export const currentYearIndex = 4
-export const currentMonthKey =  "MARCH"
-export const currentYearKey =  "TWENTY_FOUR"
 
 export const whoseHiringTitle = "Ask HN: Who is hiring?"
 

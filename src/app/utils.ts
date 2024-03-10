@@ -1,4 +1,3 @@
-import { timeStamp } from 'console';
 import {Years, YearsNumber, Months, MonthsNumber} from './constants'
 import {Job, JobText, MonthKey, Post, User} from '@/app/types'
 import { fetchItemById } from '@/apiClient/fetch';
@@ -15,8 +14,8 @@ export const verifyInputIsMonthYear = (year: Years|YearsNumber, month: Months|Mo
   // console.log('year', year, Object.values(YearsNumber).includes(year), Object.keys(YearsNumber))
   if(
     (Object.values(Years).includes(year as Years) || Object.values(YearsNumber).includes(year as YearsNumber)) && Object.values(Months).includes(month as Months) || Object.values(MonthsNumber).includes(month as MonthsNumber)) {
-      console.log('month OK', month)
-      console.log('year OK', year)
+      // console.log('month OK', month)
+      // console.log('year OK', year)
       return true
     }
   return false
@@ -105,8 +104,17 @@ export const getMonthKeyFromNumber = (monthNumber:  string) => {
 }
 export const getMontNumberFromName = (month:  Months) => {
   var monthKey = Object.keys(Months)[Object.values(Months).indexOf(month)]
-  console.log('monthKey', monthKey)
+  // console.log('monthKey', monthKey)
   const monthNumber = MonthsNumber[monthKey as keyof typeof MonthsNumber] 
-  console.log('monthNumber', monthNumber)
+  // console.log('monthNumber', monthNumber)
   return monthNumber
+}
+export const getCurrentDate = () => {
+  const date = new Date()
+  const year = date.getFullYear()
+  const month = date.getMonth() + 1
+  return {
+    year,
+    month
+  }
 }
