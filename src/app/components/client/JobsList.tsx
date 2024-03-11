@@ -10,28 +10,60 @@ import {
   sortJobsNewest,
   sortJobsOldest,
 } from '@/app/utils'
-import { Job, Post } from '@/app/types'
+import { Job, JobText, Post } from '@/app/types'
 import { Layout } from './Layout' // Fixed import statement
 import { fetchJobsByBatch } from '@/app/[year]/[month]/page'
 import { InView, useInView } from 'react-intersection-observer'
 import { fetchItemById } from '@/apiClient/fetch'
+import React from 'react'
 interface IProps {
   firstJobs: Job[]
   post: Post
   batchSize: number
   nums: number[]
 }
+interface IProps2 {
+  parsedJob: JobText
+  parsedTime: string
+}
 
-const handleChange = (route: string) => {
-  console.log('route', route)
+function WithRef({parsedJob, parsedTime}: IProps2) {
+  return (
+     <InView>
+    {({ inView, ref, entry }) => (
+     <div ref={ref}
+     className="job-accordion-container ref-added" style={{ border: inView ? "5px black solid" : "inherit" }} >
+     <AppAccordion
+       heading={parsedJob?.heading}
+       descriptions={parsedJob?.descriptions}
+       timeString={parsedTime}
+     />
+   </div>
+    )}
+  </InView>
+  
+  )
+}
+function WithoutRef({parsedJob, parsedTime}: IProps2) {
+  return (
+    <div
+      className="job-accordion-container no-ref">
+      <AppAccordion
+        heading={parsedJob?.heading}
+        descriptions={parsedJob?.descriptions}
+        timeString={parsedTime}
+      />
+    </div>
+  )
 }
 
 // pass in the jobs array for the month
 export default function JobsList({ firstJobs, post, batchSize, nums }: IProps) {
+  const tempArr = firstJobs.slice(0, 10)
   const [filter, setFilter] = useState<Filters | null>(null)
-  const [sortedJobs, setSortedJobs] = useState<Job[]>([...firstJobs])
+  const [sortedJobs, setSortedJobs] = useState<Job[]>(tempArr)
   const [loaded, setLoaded] = useState<boolean>(false)
-  const { ref, inView } = useInView();  
+  const { ref, inView } = useInView();
   const [numsLeft, setNumsLeft] = useState<number[]>(nums?.slice(batchSize))
   // const [postKidsLeft, setPostKidsLeft] = useState<number[]>(nums?.slice(batchSize))
 
@@ -57,7 +89,7 @@ export default function JobsList({ firstJobs, post, batchSize, nums }: IProps) {
   //   // store all expect first batch
   //   const nextKidsLeft = postKidsLeft.slice(batchSize)
   //   setPostKidsLeft(nextKidsLeft)
-    
+
   //   console.log('currentBatch', currentBatch)
   //   console.log('postKidsLeft', nextKidsLeft)
   //   const jobs = currentBatch.map((jobId) => fetchItemById(jobId.toString()))
@@ -73,7 +105,7 @@ export default function JobsList({ firstJobs, post, batchSize, nums }: IProps) {
     // store all expect first batch
     const nextKidsLeft = numsLeft.slice(batchSize)
     setNumsLeft(nextKidsLeft)
-    
+
     console.log('currentBatch', currentBatch)
     console.log('postKidsLeft', nextKidsLeft)
     const jobs = currentBatch.map((jobId) => fetchItemById(jobId.toString()))
@@ -100,9 +132,8 @@ export default function JobsList({ firstJobs, post, batchSize, nums }: IProps) {
     // setSortedJobs(prevJobs => [...prevJobs, ...fetchedJobs])
   }
   useEffect(() => {
-    if(inView){
-      // if(!loaded){
-        fetchNextBatch()
+    if (inView) {
+      fetchNextBatch()
     }
     // }
     // if (inView && !loaded) {
@@ -112,7 +143,7 @@ export default function JobsList({ firstJobs, post, batchSize, nums }: IProps) {
     // } else {
     //   console.log("Ref is not in view");
     // }
-  }, [inView]);
+  }, [inView])
   // useEffect(() => {
   //   console.log('ref', ref)
   //   const observer = new IntersectionObserver((entries) => {
@@ -153,28 +184,37 @@ export default function JobsList({ firstJobs, post, batchSize, nums }: IProps) {
   //     }
   //   })()
   // })
+  const isIndexAtInterval = (currentIndex: number, interval: number) => {
+    // use 1 indexing not zero
+    const incrementIndex = currentIndex + 1
+    console.log(incrementIndex)
+    if (incrementIndex > 1 && incrementIndex % interval === 0) {
+      return true
+    }
+    return false
+  }
+  
   // console.log('sortedJobs', sortedJobs)
   return (
     <Layout>
-        <main className={`${styles['jobs-list-container']}`}>
-        
+      <main className={`${styles['jobs-list-container']}`}>
+
         <ToggleButtons handleFilter={handleFilter} filter={filter} />
         {sortedJobs.map((job, i) => {
           let parsedJob = parseJobText(job?.text)
           const parsedTime = parseTimeStamp(job?.time)
           // console.log('job', job)
           return (
-            <div ref={i === 3 ? ref : null} key={job?.id} className={`${styles['job-accordion-container']} ${i === 3 ? "found" : null}`} style={{border: inView ? "5px black solid" :"inherit"}} >
-              <AppAccordion
-                heading={parsedJob?.heading}
-                descriptions={parsedJob?.descriptions}
-                timeString={parsedTime}
-              />
-            </div>
+            <React.Fragment key={job.id}>
+              {i === 3 || i === 6 ?
+                <WithRef parsedJob={parsedJob} parsedTime={parsedTime} /> :
+
+                <WithoutRef parsedJob={parsedJob} parsedTime={parsedTime}  />
+              }
+            </React.Fragment>
           )
         })}
       </main>
-      )}
-    </Layout>
-      )
+    </Layout >
+  )
 }

@@ -118,3 +118,14 @@ export const getCurrentDate = () => {
     month
   }
 }
+// when index is xth percent of list
+export const isIndexAtInterval = (currentIndex: number, interval: number) => {
+  // use 1 indexing not zero
+  const incrementIndex = currentIndex + 1
+ 
+  if(incrementIndex > 1 && incrementIndex % interval === 0) {
+    console.log('currentIndex',currentIndex)
+   return true
+  }
+  return false
+}
