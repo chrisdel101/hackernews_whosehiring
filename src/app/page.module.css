@@ -18,8 +18,9 @@
   display: flex;
   flex-direction: column;
 } 
-.job-list-container  {
-  width: 100% ;
+.job-list-container, .job-heading, .job-heading-inner, .job-heading-inner h3  {
+  text-wrap: pretty;
+  max-width: 100% ;
 }
 .job-list-container  pre  {
   text-wrap: pretty;
@@ -29,6 +30,9 @@
 } 
 .job-accordion-container {
   max-width: 100%;
+}
+.job-heading > div {
+  max-width:100% !important;
 }
 .job-description-container {
   max-width: 100%;

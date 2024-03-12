@@ -97,6 +97,7 @@ body {
 a {
   color: #0000EE;
   text-decoration: none;
+  word-wrap: break-word;
 }
 
 @media (prefers-color-scheme: dark) {

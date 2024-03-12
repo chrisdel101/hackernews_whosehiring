@@ -98,6 +98,8 @@ export default function JobsList({ firstJobs, post, batchSize, nums }: IProps) {
       const _jobs = await Promise.all(jobs)
       console.log('_jobs', _jobs)
       setAllJobsIndex(allJobsIndex + batchSize)
+      console.log('allJobsINdex', allJobsIndex)
+
       setSortedJobs(prevJobs => [...prevJobs, ..._jobs])
 
     }
@@ -130,9 +132,8 @@ export default function JobsList({ firstJobs, post, batchSize, nums }: IProps) {
     // console.log('inView', inView)
     // console.log('isFetching', isFetching)
     if (inView &&  !isFetching) {
-
       setIsFetching(true)
-      displayByBatch( )
+      await displayByBatch( )
       setIsFetching(false)
     }
   }
