@@ -23,11 +23,6 @@ export default function AppSelect({
   labelText
 }: IProps) {
   
-  // console.log('values',values)
-  // console.log('value', values?.[`${defaultValue}`])
-  // console.log('handleChangeProp', handleChangeProp)
-  
-
   return (
     <Box sx={{ minWidth: 120, 
             '@media (min-width:768px)': {

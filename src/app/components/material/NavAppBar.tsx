@@ -28,9 +28,6 @@ interface IProps {
 }
 
 export default function NavAppBar({ handleChange, params }: IProps) {
-  // console.log('nav params', params)
-  // const [monthIndex, setMonthIndex] = useState<number>(cprurrentMonthIndex)
-  // const [yearIndex, setYearIndex] = useState<number>(currentYearIndex)
   const monthKey: MonthKey = Object.keys(Months)[Object.values(Months).indexOf(params.currentMonth)] as MonthKey
   const yearKey: YearKey = Object.keys(Years)[Object.values(Years).indexOf(params.currentYear)] as YearKey
   const isXs = useMediaQuery('(max-width:600px)')
@@ -40,9 +37,6 @@ export default function NavAppBar({ handleChange, params }: IProps) {
         position="static"
         sx={{
           bgcolor: '#ff6600',
-          // '@media (min-width:600px)': {
-          //   minHeight: '75px',
-          // },
           minHeight: '75px',
           justifyContent: 'center',
         }}

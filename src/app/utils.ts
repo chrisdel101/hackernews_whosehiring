@@ -9,13 +9,8 @@ export const parseTimeStamp = (time: number) => {
   }
 // confirm params are part of the Years/Months sets
 export const verifyInputIsMonthYear = (year: Years|YearsNumber, month: Months|MonthsNumber) => {
-  // console.log(Object.keys(Months))
-  // console.log(Object.keys(YearsNumber))
-  // console.log('year', year, Object.values(YearsNumber).includes(year), Object.keys(YearsNumber))
   if(
     (Object.values(Years).includes(year as Years) || Object.values(YearsNumber).includes(year as YearsNumber)) && Object.values(Months).includes(month as Months) || Object.values(MonthsNumber).includes(month as MonthsNumber)) {
-      // console.log('month OK', month)
-      // console.log('year OK', year)
       return true
     }
   return false
@@ -56,12 +51,8 @@ export const findMatchingPost = async (year: Years, month: MonthsNumber, userDat
   
   for (let index = 0; index < submitted.length; index++) {
     const element = submitted[index].toString();
-    // console.log('element', element)
   //   // check timeStamp
     const item = await fetchItemById(element)
-    // console.log('year', year, 'month', month)
-    // console.log('item.time', item.time * 1000)
-    // console.log('item.time xx', new Date(item.time * 1000).toDateString())
     if(compareTimeStamp(item.time , year, month)) {
       // check if post is Whose Hiring
       if(item?.title.toLowerCase().includes('hiring')) {
@@ -69,14 +60,8 @@ export const findMatchingPost = async (year: Years, month: MonthsNumber, userDat
       }
     }
   }
-
-  // const currentMonth = Object.keys(Months)[MonthsNumber] 
-  
-  
-  // }
 }
 export const compareTimeStamp = (timeStamp: number, year: Years, month: MonthsNumber) => {
-  // const incrementMonth = (Number(month) + 1) % 12 
   const startDate = new Date(`${month} 1, ${year}`).getTime() / 1000; // Convert milliseconds to seconds
   const nextMonthDate = new Date(`${month} 1, ${year}`);
   // increment month including to next year 
@@ -104,9 +89,7 @@ export const getMonthKeyFromNumber = (monthNumber:  string) => {
 }
 export const getMontNumberFromName = (month:  Months) => {
   var monthKey = Object.keys(Months)[Object.values(Months).indexOf(month)]
-  // console.log('monthKey', monthKey)
   const monthNumber = MonthsNumber[monthKey as keyof typeof MonthsNumber] 
-  // console.log('monthNumber', monthNumber)
   return monthNumber
 }
 export const getCurrentDate = () => {
