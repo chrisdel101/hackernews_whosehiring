@@ -20,34 +20,32 @@ interface IProps {
   firstJobs: Job[]
   post: Post
   batchSize: number
-  nums: number[]
+  nums?: number[]
 }
 interface IProps2 {
   parsedJob: JobText
   parsedTime: string
+  handleChange?: ((inView: boolean) => void)
 }
 
-function WithRef({parsedJob, parsedTime}: IProps2) {
-  return (
-     <InView>
-    {({ inView, ref, entry }) => (
-     <div ref={ref}
-     className="job-accordion-container ref-added" style={{ border: inView ? "5px black solid" : "inherit" }} >
-     <AppAccordion
-       heading={parsedJob?.heading}
-       descriptions={parsedJob?.descriptions}
-       timeString={parsedTime}
-     />
-   </div>
-    )}
-  </InView>
-  
-  )
-}
-function WithoutRef({parsedJob, parsedTime}: IProps2) {
+function WithRef({ parsedJob, parsedTime, handleChange }: IProps2) {
   return (
     <div
-      className="job-accordion-container no-ref">
+      className={`${styles['job-list-container']} ref-added`} style={{ border: "5px black solid" }} >
+      <InView onChange={(inView) => handleChange && handleChange(inView)}>
+        <AppAccordion
+          heading={parsedJob?.heading}
+          descriptions={parsedJob?.descriptions}
+          timeString={parsedTime}
+        />
+      </InView>
+    </div>
+  )
+}
+function WithoutRef({ parsedJob, parsedTime }: IProps2) {
+  return (
+    <div
+      className={`${styles['job-list-container']}`}>
       <AppAccordion
         heading={parsedJob?.heading}
         descriptions={parsedJob?.descriptions}
@@ -59,14 +57,18 @@ function WithoutRef({parsedJob, parsedTime}: IProps2) {
 
 // pass in the jobs array for the month
 export default function JobsList({ firstJobs, post, batchSize, nums }: IProps) {
-  const tempArr = firstJobs.slice(0, 10)
   const [filter, setFilter] = useState<Filters | null>(null)
-  const [sortedJobs, setSortedJobs] = useState<Job[]>(tempArr)
+  const [sortedJobs, setSortedJobs] = useState<Job[]>(firstJobs)
+  const [allJobs, setAllJobs] = useState<Job[]>(firstJobs)
+  const [allJobsIndex, setAllJobsIndex] = useState<number>(batchSize)
   const [loaded, setLoaded] = useState<boolean>(false)
-  const { ref, inView } = useInView();
-  const [numsLeft, setNumsLeft] = useState<number[]>(nums?.slice(batchSize))
-  // const [postKidsLeft, setPostKidsLeft] = useState<number[]>(nums?.slice(batchSize))
+  const [isFetching, setIsFetching] = useState<boolean>(false)
 
+  useEffect(() => {
+    console.log('FIRED')
+    fetchAndUpdateJobs(batchSize)
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
   const handleFilter = (
     event: React.MouseEvent<HTMLElement>,
     newFilter: string | null
@@ -82,118 +84,59 @@ export default function JobsList({ firstJobs, post, batchSize, nums }: IProps) {
       setSortedJobs(firstJobs)
     }
   }
-  // const fetchNextBatch = async () => {
-  //   console.log('postKidsLeft', postKidsLeft)
-  //   // get current first bactch
-  //   const currentBatch = postKidsLeft.slice(0, batchSize)
-  //   // store all expect first batch
-  //   const nextKidsLeft = postKidsLeft.slice(batchSize)
-  //   setPostKidsLeft(nextKidsLeft)
-
-  //   console.log('currentBatch', currentBatch)
-  //   console.log('postKidsLeft', nextKidsLeft)
-  //   const jobs = currentBatch.map((jobId) => fetchItemById(jobId.toString()))
-  //   const _jobs = await Promise.all(jobs)
-  //   console.log('_jobs', _jobs)
-  //   // setSortedJobs(prevJobs => [...prevJobs, ..._jobs])
-  //   // setPostKidsLeft(postKidsLeft.slice(batchSize))
-  // }
-  const fetchNextBatch = async () => {
-    console.log('postKidsLeft', numsLeft)
+ 
+  const displayByBatch = async () => {
+    // console.log('all jobs', all)
     // get current first bactch
-    const currentBatch = numsLeft.slice(0, batchSize)
-    // store all expect first batch
-    const nextKidsLeft = numsLeft.slice(batchSize)
-    setNumsLeft(nextKidsLeft)
+    const currentBatch = allJobs.slice(allJobsIndex, allJobsIndex+batchSize)
+    // store all expect first batch  
 
     console.log('currentBatch', currentBatch)
-    console.log('postKidsLeft', nextKidsLeft)
-    const jobs = currentBatch.map((jobId) => fetchItemById(jobId.toString()))
-    const _jobs = await Promise.all(jobs)
-    console.log('_jobs', _jobs)
-    setSortedJobs(prevJobs => [...prevJobs, ..._jobs])
-    // setPostKidsLeft(postKidsLeft.slice(batchSize))
-  }
-  const fetchAndUpdateJobs = async () => {
-    const batchSize = 20
-    let jobsLeft = post?.kids?.slice(batchSize)
-    const fetchedJobs: Job[] = []
-    for (let i = 0; i < 21; i += batchSize) {
+    // console.log('postKidsLeft', nextKidsLeft)
+    if(currentBatch.length > 0) {
+      const jobs = currentBatch.map((job) => fetchItemById(job?.id.toString()))
+      const _jobs = await Promise.all(jobs)
+      console.log('_jobs', _jobs)
+      setAllJobsIndex(allJobsIndex + batchSize)
+      setSortedJobs(prevJobs => [...prevJobs, ..._jobs])
 
+    }
+  }
+  const fetchAndUpdateJobs = async (batchSize: number) => {
+   
+    let jobsLeft = post?.kids?.slice(batchSize)
+    // const fetchedJobs: Job[] = []
+    for (let i = 0; i < jobsLeft?.length; i += batchSize) {
+      // get size of batch or what's left size
       const blockEnd = Math.min(i + batchSize, jobsLeft.length)
+      // cut block size of arr
       const chunk = jobsLeft.slice(i, blockEnd)
-      console.log('CHUNK', chunk)
-      console.log('NUM:', i)
+      // console.log('CHUNK', chunk)
+      // console.log('NUM:', i)
       const jobs = chunk.map((jobId) => fetchItemById(jobId.toString()))
       const _jobs = await Promise.all(jobs)
-      fetchedJobs.push(..._jobs)
+      // fetchedJobs.push(..._jobs)
+      setAllJobs(prevJobs => [...prevJobs, ... _jobs])
     }
     // Update state with all fetched jobs at once
-    // setSortedJobs(prevJobs => [...prevJobs, ...fetchedJobs])
   }
-  useEffect(() => {
-    if (inView) {
-      fetchNextBatch()
+
+  const handleInviewChange = async (inView: boolean) => {
+    // LOAD = on first scrool load all jobs by batch
+    console.log('change event fired')
+    
+
+    // ADDING TO PAGE
+    // console.log('inView', inView)
+    // console.log('isFetching', isFetching)
+    if (inView &&  !isFetching) {
+
+      setIsFetching(true)
+      displayByBatch( )
+      setIsFetching(false)
     }
-    // }
-    // if (inView && !loaded) {
-    //  setLoaded(true) 
-    //  fetchAndUpdateJobs()
-    //   // Call your function here
-    // } else {
-    //   console.log("Ref is not in view");
-    // }
-  }, [inView])
-  // useEffect(() => {
-  //   console.log('ref', ref)
-  //   const observer = new IntersectionObserver((entries) => {
-  //     console.log('entries', entries)
-  //     if (entries[0].isIntersecting) {
-  //       console.log('Intersecting', entries[0])
-  //     }
-  //   })
-  //   if (ref?.current) {
-  //     observer.observe(ref?.current)
-  //   }
-  // })  
-  // useEffect(() => {
-  //   fetchAndUpdateJobs();
-  // }, [])
-  // useEffect(() => {
-  //   ;(async () => {
-  //     // chop off the first batch
-  //     let jobsLeft = post?.kids?.slice(batchSize)
-  //     console.log('jobsLeft', jobsLeft)
-  //     // increment by batchSize thru remain arr
-  //     for (var i = 0; i < 21; i += batchSize) {
-  //       console.log("I", i)
-  //       const blockEnd = Math.min(i + batchSize, jobsLeft.length)
-  //       const chunk = jobsLeft.slice(i, blockEnd)
-  //       console.log('CHUNK', chunk)
-  //       console.log('NUM:', i)
-  //       const jobs = chunk.map((jobId) => fetchItemById(jobId.toString()))
-  //       await Promise.all(jobs)
-  //         .then((_jobs) => {
-  //           console.log('_jobs', _jobs)
-  //           // setSortedJobs(_jobs)
-  //         })
-  //         .catch((error) => {
-  //           console.error('Error fetching jobs:', error)
-  //         })
-  //       //  console.log('jobs', jobs)
-  //     }
-  //   })()
-  // })
-  const isIndexAtInterval = (currentIndex: number, interval: number) => {
-    // use 1 indexing not zero
-    const incrementIndex = currentIndex + 1
-    console.log(incrementIndex)
-    if (incrementIndex > 1 && incrementIndex % interval === 0) {
-      return true
-    }
-    return false
   }
-  
+
   // console.log('sortedJobs', sortedJobs)
   return (
     <Layout>
@@ -206,10 +149,13 @@ export default function JobsList({ firstJobs, post, batchSize, nums }: IProps) {
           // console.log('job', job)
           return (
             <React.Fragment key={job.id}>
-              {i === 3 || i === 6 ?
-                <WithRef parsedJob={parsedJob} parsedTime={parsedTime} /> :
+              {(i > 0 && (i % 3 === 0)) ?
+                <WithRef
+                  parsedJob={parsedJob} parsedTime={parsedTime}
+                  handleChange={handleInviewChange}
+                /> :
 
-                <WithoutRef parsedJob={parsedJob} parsedTime={parsedTime}  />
+                <WithoutRef parsedJob={parsedJob} parsedTime={parsedTime} />
               }
             </React.Fragment>
           )
