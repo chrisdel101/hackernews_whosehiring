@@ -9,8 +9,10 @@ import {
   parseJobText,
   sortJobsNewest,
   sortJobsOldest,
+  mapJobArrToObj,
+  addArrItemsToObject,
 } from '@/app/utils'
-import { Job, JobText, Post } from '@/app/types'
+import { Job, JobObject, JobText, Post } from '@/app/types'
 import { Layout } from './Layout' // Fixed import statement
 import { InView } from 'react-intersection-observer'
 import { fetchItemById } from '@/apiClient/fetch'
@@ -57,14 +59,14 @@ function WithoutRef({ parsedJob, parsedTime }: IProps2) {
 // pass in the jobs array for the month
 export default function JobsList({ firstJobs, post, batchSize }: IProps) {
   const [filter, setFilter] = useState<Filters | null>(null)
-  const [sortedJobs, setSortedJobs] = useState<Job[]>(firstJobs)
-  const [allJobs, setAllJobs] = useState<Job[]>(firstJobs)
+  const [sortedJobsObj, setSortedJobsObj] = useState<JobObject>(mapJobArrToObj(firstJobs))
+  const [allJobsObj, setAllJobsObj] = useState<any>({})
   const [allJobsIndex, setAllJobsIndex] = useState<number>(batchSize)
   const [isFetching, setIsFetching] = useState<boolean>(false)
-
   useEffect(() => {
-    fetchAndUpdateJobs(batchSize)
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // onload sets jobs to allJobs 
+    getBatchJobs(batchSize)
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
   const handleFilter = (
     event: React.MouseEvent<HTMLElement>,
@@ -72,50 +74,64 @@ export default function JobsList({ firstJobs, post, batchSize }: IProps) {
   ) => {
     if (newFilter === Filters.NEWEST) {
       setFilter(Filters.NEWEST)
-      setSortedJobs(sortJobsNewest(firstJobs))
+      setSortedJobsObj(mapJobArrToObj(sortJobsNewest(firstJobs)))
     } else if (newFilter === Filters.OLDEST) {
       setFilter(Filters.OLDEST)
-      setSortedJobs(sortJobsOldest(firstJobs))
+      setSortedJobsObj(mapJobArrToObj(sortJobsOldest(firstJobs)))
     } else if (newFilter === Filters.RESET) {
       setFilter(null)
-      setSortedJobs(firstJobs)
+      setSortedJobsObj((mapJobArrToObj(sortJobsOldest(firstJobs))))
     }
   }
- 
-  const displayByBatch = async () => {
-    // get current first bactch
-    const currentBatch = allJobs.slice(allJobsIndex, allJobsIndex+batchSize)
-    // console.log('currentBatch', currentBatch)
-    if(currentBatch.length > 0) {
-      const jobs = currentBatch.map((job) => fetchItemById(job?.id.toString()))
-      const _jobs = await Promise.all(jobs)
-      // console.log('_jobs', _jobs)
-      setAllJobsIndex(allJobsIndex + batchSize)
-      setSortedJobs(prevJobs => [...prevJobs, ..._jobs])
+
+  const displayBatchJobs = async () => {
+    // get current first batch
+    const currentBatch = Object.values?.(allJobsObj).slice(allJobsIndex, allJobsIndex + batchSize)
+    if (currentBatch.length > 0) {
+      console.log("curernt", currentBatch)
     }
+      // Create promises for state updates
+    // setAllJobsIndex(prev => prev + batchSize)
+    // const addSortedJobsObj = addArrItemsToObject(sortedJobs
+    // setSortedJobsObj(prevJobs => [...prevJobs, ...currentBatch]);;
+    // console.log('hi')
+  
   }
-  const fetchAndUpdateJobs = async (batchSize: number) => {
-   
-    let jobsLeft = post?.kids?.slice(batchSize)
-    for (let i = 0; i < jobsLeft?.length; i += batchSize) {
-      // get size of batch or what's left size
-      const blockEnd = Math.min(i + batchSize, jobsLeft.length)
-      // cut block size of arr
-      const chunk = jobsLeft.slice(i, blockEnd)
+  // useEffect(() => {
+  //   console.log("HERE", allJobsObj)
+  // }, [allJobsObj])
+  const getBatchJobs = async (batchSize: number) => {
+    //  slice off first batch - comes from server on load
+    let jobIDsLeft = post?.kids?.slice(batchSize)
+    // increment by batch size
+    for (let i = 0; i < 81; i += batchSize) {
+      // make currentChunkSize the size of batch, or what's left at end of arr
+      const currentChunkSize = Math.min(i + batchSize, jobIDsLeft.length)
+      // cut off chunk of currentChunkSize size
+      const chunk = jobIDsLeft.slice(i, currentChunkSize)
       // console.log('CHUNK', chunk)
       // console.log('NUM:', i)
-      const jobs = chunk.map((jobId) => fetchItemById(jobId.toString()))
-      const _jobs = await Promise.all(jobs)
-      setAllJobs(prevJobs => [...prevJobs, ... _jobs])
+      // loop over current chunk - get arr of promises
+      const jobsPromises = chunk.map(async (jobId) => await fetchItemById(jobId.toString()))
+      // arr of obj objs
+      const resovledJobsArr = await Promise.all(jobsPromises)
+      // console.log('resovledJobsArr', resovledJobsArr)
+      // console.log('allJobsObj before', allJobsObj)
+      const addToJobsObj = addArrItemsToObject(resovledJobsArr, allJobsObj)
+      setAllJobsObj((prevState: JobObject) => {
+        // console.log("prev", prevS  tate)
+        const newData = addArrItemsToObject(resovledJobsArr, prevState);
+        return newData;
+    });      // console.log('length', Object.keys(allJobsObj).length)
     }
   }
 
   const handleInviewChange = async (inView: boolean) => {
-    // console.log('inView', inView)
-    if (inView &&  !isFetching) {
+    console.log('inView', inView)
+    if (inView && !isFetching) {
       setIsFetching(true)
-      await displayByBatch( )
-      setIsFetching(false)
+      displayBatchJobs()
+        setIsFetching(false)
     }
   }
 
@@ -124,7 +140,7 @@ export default function JobsList({ firstJobs, post, batchSize }: IProps) {
       <main className={`${styles['jobs-list-container']}`}>
 
         <ToggleButtons handleFilter={handleFilter} filter={filter} />
-        {sortedJobs.map((job, i) => {
+        {Object.values(sortedJobsObj).map((job, i) => {
           let parsedJob = parseJobText(job?.text)
           const parsedTime = parseTimeStamp(job?.time)
           return (

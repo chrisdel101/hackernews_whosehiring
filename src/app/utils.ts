@@ -1,5 +1,5 @@
 import {Years, YearsNumber, Months, MonthsNumber} from './constants'
-import {Job, JobText, MonthKey, Post, User} from '@/app/types'
+import {Job, JobObject, JobText, MonthKey, Post, User} from '@/app/types'
 import { fetchItemById } from '@/apiClient/fetch';
 
 export const parseTimeStamp = (time: number) => {
@@ -111,4 +111,38 @@ export const isIndexAtInterval = (currentIndex: number, interval: number) => {
    return true
   }
   return false
+}
+// returns the first batch from 0-batch index 
+export const getFirstJobsBatch = async (post: Post, batch: number) => {
+  // console.log('post', post)
+  const batchJobs = post?.kids?.slice(0, batch)
+  const jobs: Job[] = []
+  for(let id of batchJobs) {
+    const job = await fetchItemById(id?.toString())
+    // console.log('job', job)
+    jobs.push(job)
+  }
+  return Promise.all(jobs)
+}
+export var mapJobArrToObj = (jobArr: Job[]) => {
+  const output = jobArr.reduce(
+    (prev, cur) => ({ ...prev, [cur?.id?.toString()]: cur }), {});
+  // console.log("oo", output);
+  return output;
+}
+var mapObjToArray = (obj) => {
+  return [...Object.values(obj)]
+}
+export const addArrItemsToObject = (newJobsArr: Job[], jobObj: JobObject) => {
+  if(!jobObj || !newJobsArr) return
+  let tempObj: JobObject = {}
+  for(let item of newJobsArr) {
+    let {id} = item
+    if(!jobObj[id]){
+      tempObj[id] = item
+
+    }
+  }
+  // console.log('tempObj', tempObj)
+  return {...jobObj, ...tempObj}
 }

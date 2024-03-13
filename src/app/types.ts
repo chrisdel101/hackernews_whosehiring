@@ -31,3 +31,6 @@ export type User = {
 }
 export type MonthKey = keyof typeof Months;
 export type YearKey = keyof typeof Years;
+export type JobObject = {
+    [id: string]: Job
+}

@@ -6,7 +6,8 @@ export const fetchItemById = async (id: string) => {
     return data;
 }
 export const fetchAllPosts = async () => {
-    const response = await fetch(`${endPoint}/${whoseHiring}.json`);    const data = await response.json();
+    const response = await fetch(`${endPoint}/${whoseHiring}.json`);    
+    const data = await response.json();
     return data;
 }
 export const fetchData = async (url: string) => { 
