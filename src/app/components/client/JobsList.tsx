@@ -60,7 +60,7 @@ function WithoutRef({ parsedJob, parsedTime }: IProps2) {
 export default function JobsList({ firstJobs, post, batchSize }: IProps) {
   const [filter, setFilter] = useState<Filters | null>(null)
   const [sortedJobsObj, setSortedJobsObj] = useState<JobObject>(mapJobArrToObj(firstJobs))
-  const [allJobsObj, setAllJobsObj] = useState<any>({})
+  const [allJobsObj, setAllJobsObj] = useState<JobObject>(mapJobArrToObj(firstJobs))
   const [allJobsIndex, setAllJobsIndex] = useState<number>(batchSize)
   const [isFetching, setIsFetching] = useState<boolean>(false)
   useEffect(() => {
@@ -89,9 +89,15 @@ export default function JobsList({ firstJobs, post, batchSize }: IProps) {
     const currentBatch = Object.values?.(allJobsObj).slice(allJobsIndex, allJobsIndex + batchSize)
     if (currentBatch.length > 0) {
       console.log("curernt", currentBatch)
+      const addJobsToSortedObj = addArrItemsToObject(currentBatch, sortedJobsObj)
+      setSortedJobsObj((prevState) => {
+        // console.log("prev", prevS  tate)
+        const newData = addArrItemsToObject(currentBatch, prevState);
+        return newData;
+    });   
+    setAllJobsIndex(prev => prev + batchSize)
     }
       // Create promises for state updates
-    // setAllJobsIndex(prev => prev + batchSize)
     // const addSortedJobsObj = addArrItemsToObject(sortedJobs
     // setSortedJobsObj(prevJobs => [...prevJobs, ...currentBatch]);;
     // console.log('hi')
@@ -104,7 +110,7 @@ export default function JobsList({ firstJobs, post, batchSize }: IProps) {
     //  slice off first batch - comes from server on load
     let jobIDsLeft = post?.kids?.slice(batchSize)
     // increment by batch size
-    for (let i = 0; i < 81; i += batchSize) {
+    for (let i = 0; i < jobIDsLeft.length; i += batchSize) {
       // make currentChunkSize the size of batch, or what's left at end of arr
       const currentChunkSize = Math.min(i + batchSize, jobIDsLeft.length)
       // cut off chunk of currentChunkSize size
@@ -117,7 +123,6 @@ export default function JobsList({ firstJobs, post, batchSize }: IProps) {
       const resovledJobsArr = await Promise.all(jobsPromises)
       // console.log('resovledJobsArr', resovledJobsArr)
       // console.log('allJobsObj before', allJobsObj)
-      const addToJobsObj = addArrItemsToObject(resovledJobsArr, allJobsObj)
       setAllJobsObj((prevState: JobObject) => {
         // console.log("prev", prevS  tate)
         const newData = addArrItemsToObject(resovledJobsArr, prevState);
