@@ -69,7 +69,6 @@ export const compareTimeStamp = (timeStamp: number, year: Years, month: MonthsNu
   // console.log('nextMonthDate', nextMonthDate)
   const endDate = nextMonthDate.getTime() / 1000;
   if (timeStamp >= startDate && timeStamp < endDate) {
-    console.log('found', startDate, endDate, timeStamp)
     return true
   }
   return false
