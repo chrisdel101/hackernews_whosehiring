@@ -101,17 +101,6 @@ export const getCurrentDate = () => {
     month
   }
 }
-// when index is xth percent of list
-export const isIndexAtInterval = (currentIndex: number, interval: number) => {
-  // use 1 indexing not zero
-  const incrementIndex = currentIndex + 1
-
-  if (incrementIndex > 1 && incrementIndex % interval === 0) {
-    console.log('currentIndex', currentIndex)
-    return true
-  }
-  return false
-}
 // returns the first batch from 0-batch index 
 export const getFirstJobsBatch = async (post: Post, batch: number) => {
   // console.log('post', post)
@@ -124,42 +113,6 @@ export const getFirstJobsBatch = async (post: Post, batch: number) => {
   }
   return Promise.all(jobs)
 }
-export var mapJobArrToObj = (jobArr: Job[]) => {
-  const output = jobArr.reduce(
-    (prev, cur) => ({ ...prev, [cur?.id?.toString()]: cur }), {});
-  // console.log("oo", output);
-  return output;
-}
-var mapObjToArray = (obj) => {
-  return [...Object.values(obj)]
-}
-export const addArrItemsToObject = (newJobsArr: Job[], jobObj: JobObject) => {
-  if (!jobObj || !newJobsArr) return
-  let tempObj: JobObject = {}
-  for (let item of newJobsArr) {
-    let { id } = item
-    if (!jobObj[id]) {
-      tempObj[id] = item
-
-    }
-  }
-  // console.log('tempObj', tempObj)
-  return { ...jobObj, ...tempObj }
-}
-// loop over smaller arr check large incudes
-// only works for strings/numbers
-export const checkForDupesSmallInLarge = (arrToCheck: Job[], parentArr: Job[]) => {
-  // if child not found in parent then add
-  const filterArr = arrToCheck.filter(job => {
-    console.log('job', job)
-    if (!parentArr.includes(job)) {
-      return job
-    } else {
-      console.log("DUPE FOUND", job)
-    }
-  })
-  return filterArr
-} 
 export const checkForDupesArrOfObjs = (arrToLoop: Job[], arrToCheckIn: Job[]) => {
   // loop over larger arr
   return arrToLoop.filter(jobA => !arrToCheckIn.some(jobB => jobA.id === jobB.id));
