@@ -1,21 +1,21 @@
-import {Years, YearsNumber, Months, MonthsNumber} from './constants'
-import {Job, JobObject, JobText, MonthKey, Post, User} from '@/app/types'
+import { Years, YearsNumber, Months, MonthsNumber } from './constants'
+import { Job, JobObject, JobText, MonthKey, Post, User } from '@/app/types'
 import { fetchItemById } from '@/apiClient/fetch';
 
 export const parseTimeStamp = (time: number) => {
-    let date = new Date(time * 1000)
-    let options = { timeZone: 'UTC' }; 
-    return date.toLocaleDateString('en-US', options)
-  }
+  let date = new Date(time * 1000)
+  let options = { timeZone: 'UTC' };
+  return date.toLocaleDateString('en-US', options)
+}
 // confirm params are part of the Years/Months sets
-export const verifyInputIsMonthYear = (year: Years|YearsNumber, month: Months|MonthsNumber) => {
-  if(
+export const verifyInputIsMonthYear = (year: Years | YearsNumber, month: Months | MonthsNumber) => {
+  if (
     (Object.values(Years).includes(year as Years) || Object.values(YearsNumber).includes(year as YearsNumber)) && Object.values(Months).includes(month as Months) || Object.values(MonthsNumber).includes(month as MonthsNumber)) {
-      return true
-    }
+    return true
+  }
   return false
 }
-export const parseJobText = (text: string| undefined) => {
+export const parseJobText = (text: string | undefined) => {
   const splitText = text?.split('<p>')
   const heading = splitText?.[0]
   const descriptions = splitText?.slice(1)
@@ -25,37 +25,37 @@ export const parseJobText = (text: string| undefined) => {
   } as JobText;
 }
 export const sortJobsNewest = (jobs: Job[]) => {
-  const copyJobs =    [...jobs]   
+  const copyJobs = [...jobs]
   return copyJobs.sort((a, b) => {
-      return b.time - a.time
+    return b.time - a.time
   })
 }
 export const sortJobsOldest = (jobs: Job[]) => {
-  const copyJobs =    [...jobs] 
+  const copyJobs = [...jobs]
   return copyJobs.sort((a, b) => {
-      return a.time - b.time
+    return a.time - b.time
   })
 }
 // check if post is Whose Hiring
 export const isHiringPost = (post: Post) => {
   // check for exact match
-  if(post.title.toLowerCase() === `Ask HN: Who is hiring?`.toLowerCase()) {
+  if (post.title.toLowerCase() === `Ask HN: Who is hiring?`.toLowerCase()) {
     return true
     // check for partial match
-  } else if(post.title.toLowerCase().includes('hiring')) {
+  } else if (post.title.toLowerCase().includes('hiring')) {
     return true
   }
 }
 export const findMatchingPost = async (year: Years, month: MonthsNumber, userData: User) => {
-  const {submitted} = userData
-  
+  const { submitted } = userData
+
   for (let index = 0; index < submitted.length; index++) {
     const element = submitted[index].toString();
-  //   // check timeStamp
+    //   // check timeStamp
     const item = await fetchItemById(element)
-    if(compareTimeStamp(item.time , year, month)) {
+    if (compareTimeStamp(item.time, year, month)) {
       // check if post is Whose Hiring
-      if(item?.title.toLowerCase().includes('hiring')) {
+      if (item?.title.toLowerCase().includes('hiring')) {
         return item
       }
     }
@@ -68,11 +68,11 @@ export const compareTimeStamp = (timeStamp: number, year: Years, month: MonthsNu
   nextMonthDate.setMonth(nextMonthDate.getMonth() + 1); // Move to the next month
   // console.log('nextMonthDate', nextMonthDate)
   const endDate = nextMonthDate.getTime() / 1000;
- if(timeStamp >= startDate && timeStamp < endDate) {
-  console.log('found', startDate, endDate, timeStamp)
-  return true
- }
- return false
+  if (timeStamp >= startDate && timeStamp < endDate) {
+    console.log('found', startDate, endDate, timeStamp)
+    return true
+  }
+  return false
 }
 export const parsePathName = (pathname: string) => {
   const splitPath = pathname.split('/')
@@ -82,14 +82,14 @@ export const parsePathName = (pathname: string) => {
     monthNumber: splitPath?.[2]
   }
 }
-export const getMonthKeyFromNumber = (monthNumber:  string) => {
+export const getMonthKeyFromNumber = (monthNumber: string) => {
   const index = Object.values(MonthsNumber).indexOf(monthNumber as MonthsNumber)
   const monthKey = Object.keys(MonthsNumber)[index] as MonthKey
   return monthKey
 }
-export const getMontNumberFromName = (month:  Months) => {
+export const getMontNumberFromName = (month: Months) => {
   var monthKey = Object.keys(Months)[Object.values(Months).indexOf(month)]
-  const monthNumber = MonthsNumber[monthKey as keyof typeof MonthsNumber] 
+  const monthNumber = MonthsNumber[monthKey as keyof typeof MonthsNumber]
   return monthNumber
 }
 export const getCurrentDate = () => {
@@ -105,10 +105,10 @@ export const getCurrentDate = () => {
 export const isIndexAtInterval = (currentIndex: number, interval: number) => {
   // use 1 indexing not zero
   const incrementIndex = currentIndex + 1
- 
-  if(incrementIndex > 1 && incrementIndex % interval === 0) {
-    console.log('currentIndex',currentIndex)
-   return true
+
+  if (incrementIndex > 1 && incrementIndex % interval === 0) {
+    console.log('currentIndex', currentIndex)
+    return true
   }
   return false
 }
@@ -117,7 +117,7 @@ export const getFirstJobsBatch = async (post: Post, batch: number) => {
   // console.log('post', post)
   const batchJobs = post?.kids?.slice(0, batch)
   const jobs: Job[] = []
-  for(let id of batchJobs) {
+  for (let id of batchJobs) {
     const job = await fetchItemById(id?.toString())
     // console.log('job', job)
     jobs.push(job)
@@ -134,15 +134,33 @@ var mapObjToArray = (obj) => {
   return [...Object.values(obj)]
 }
 export const addArrItemsToObject = (newJobsArr: Job[], jobObj: JobObject) => {
-  if(!jobObj || !newJobsArr) return
+  if (!jobObj || !newJobsArr) return
   let tempObj: JobObject = {}
-  for(let item of newJobsArr) {
-    let {id} = item
-    if(!jobObj[id]){
+  for (let item of newJobsArr) {
+    let { id } = item
+    if (!jobObj[id]) {
       tempObj[id] = item
 
     }
   }
   // console.log('tempObj', tempObj)
-  return {...jobObj, ...tempObj}
+  return { ...jobObj, ...tempObj }
 }
+// loop over smaller arr check large incudes
+// only works for strings/numbers
+export const checkForDupesSmallInLarge = (arrToCheck: Job[], parentArr: Job[]) => {
+  // if child not found in parent then add
+  const filterArr = arrToCheck.filter(job => {
+    console.log('job', job)
+    if (!parentArr.includes(job)) {
+      return job
+    } else {
+      console.log("DUPE FOUND", job)
+    }
+  })
+  return filterArr
+} 
+export const checkForDupesArrOfObjs = (arrToLoop: Job[], arrToCheckIn: Job[]) => {
+  // loop over larger arr
+  return arrToLoop.filter(jobA => !arrToCheckIn.some(jobB => jobA.id === jobB.id));
+} 
