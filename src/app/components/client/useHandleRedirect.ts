@@ -5,13 +5,11 @@ import { getMontNumberFromName, getMonthKeyFromNumber, parsePathName } from '@/a
 import { Months, Years } from '@/app/constants'
 import { MonthKey } from '@/app/types'
 
-
+// handle input from drop down router
 export const useHandleRedirect = () => {
     const pathname = usePathname()
     const router = useRouter()
     const { monthNumber, year } = parsePathName(pathname)
-
-
     const [currentMonth, setCurrentMonth] = useState<Months>(Months?.[getMonthKeyFromNumber(monthNumber) as MonthKey])
 
     const [currentYear, setCurrentYear] = useState<Years>(year as Years)

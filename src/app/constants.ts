@@ -1,10 +1,8 @@
 
 export const endPoint = "https://hacker-news.firebaseio.com/v0/"
+// i.e.https://hacker-news.firebaseio.com/v0/item/39217310.json
 
 export const whoseHiring = "user/whoishiring.json?print=pretty"
-
-export const currentMonthID = "39217310"
-// https://hacker-news.firebaseio.com/v0/item/39217310.json
 
 export const navTitleLarge = "Hacker News Whose Hiring"
 export const navTitleXS = "HN"

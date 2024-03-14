@@ -23,7 +23,7 @@ interface IProps {
   batchSize: number
   nums?: number[]
 }
-interface IProps2 {
+interface IChildProps {
   parsedJob: JobText
   parsedTime: string
   handleChange?: ((inView: boolean) => void)
@@ -44,14 +44,14 @@ export default function JobsList({ firstJobs, post, batchSize }: IProps) {
   useEffect(() => {
     if (checked) {
       if (sortedJobs.length != allJobs.length) {
-        console.log('sorted', sortedJobs.length)
-        console.log('all', allJobs.length)
+        // console.log('sorted', sortedJobs.length)
         displayAllJobs()
       }
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [checked, allJobs])
   const handleFilter = (
-    event: React.MouseEvent<HTMLElement>,
+    _event: React.MouseEvent<HTMLElement>,
     newFilter: string | null
   ) => {
     if (newFilter === Filters.NEWEST) {
@@ -89,8 +89,6 @@ export default function JobsList({ firstJobs, post, batchSize }: IProps) {
       const currentChunkSize = Math.min(i + batchSize, jobIDsLeft.length)
       // cut off chunk of currentChunkSize size
       const chunk = jobIDsLeft.slice(i, currentChunkSize)
-      // console.log('CHUNK', chunk)
-      // console.log('NUM:', i)
       // loop over current chunk - get arr of promises
       const jobsPromises = chunk.map(async (jobId) => await fetchItemById(jobId.toString()))
       // arr of obj objs
@@ -101,7 +99,6 @@ export default function JobsList({ firstJobs, post, batchSize }: IProps) {
       })
     }
   }
-
   const handleInviewChange = async (inView: boolean) => {
     if (inView && !isFetching) {
       setIsFetching(true)
@@ -115,7 +112,6 @@ export default function JobsList({ firstJobs, post, batchSize }: IProps) {
   return (
     <Layout>
       <main className={`${styles['jobs-list-container']}`}>
-
         <ToggleButtons handleFilter={handleFilter} filter={filter} />
         <CheckBoxLabel
           label={"Load All"}
@@ -142,7 +138,7 @@ export default function JobsList({ firstJobs, post, batchSize }: IProps) {
     </Layout >
   )
 }
-function WithRef({ parsedJob, parsedTime, handleChange }: IProps2) {
+function WithRef({ parsedJob, parsedTime, handleChange }: IChildProps) {
   return (
     <div
       className={`${styles['job-list-container']} ref-added`}>
@@ -156,7 +152,7 @@ function WithRef({ parsedJob, parsedTime, handleChange }: IProps2) {
     </div>
   )
 }
-function WithoutRef({ parsedJob, parsedTime }: IProps2) {
+function WithoutRef({ parsedJob, parsedTime }: IChildProps) {
   return (
     <div
       className={`${styles['job-list-container']}`}>

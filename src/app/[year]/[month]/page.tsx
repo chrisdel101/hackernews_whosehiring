@@ -2,12 +2,15 @@
 import { fetchData } from '../../../apiClient/fetch'
 import { endPoint, whoseHiring } from '@/app/constants'
 import JobsList from '../../components/client/JobsList'
-import { URLParams } from '@/app/page'
+import { URLParams } from '@/app/types'
 import { findMatchingPost, verifyInputIsMonthYear, getFirstJobsBatch } from '@/app/utils'
 import { notFound } from 'next/navigation'
 
+interface PageParams {
+  params: URLParams
+}
 
-export default async function Page({ params }: URLParams) {
+export default async function Page({ params }: PageParams) {
   // fetch data for whoseHiring
   const userData = await fetchData(`${endPoint}/${whoseHiring}.json`)
   const batch = 20
@@ -20,7 +23,7 @@ export default async function Page({ params }: URLParams) {
     } else {
       return (
         <JobsList
-          firstJobs={await getFirstJobsBatch(post, 20)}
+          firstJobs={await getFirstJobsBatch(post, batch)}
           post={post}
           batchSize={batch} />
       )

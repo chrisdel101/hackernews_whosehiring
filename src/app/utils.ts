@@ -66,7 +66,6 @@ export const compareTimeStamp = (timeStamp: number, year: Years, month: MonthsNu
   const nextMonthDate = new Date(`${month} 1, ${year}`)
   // increment month including to next year 
   nextMonthDate.setMonth(nextMonthDate.getMonth() + 1) // Move to the next month
-  // console.log('nextMonthDate', nextMonthDate)
   const endDate = nextMonthDate.getTime() / 1000
   if (timeStamp >= startDate && timeStamp < endDate) {
     return true
@@ -102,12 +101,10 @@ export const getCurrentDate = () => {
 }
 // returns the first batch from 0-batch index 
 export const getFirstJobsBatch = async (post: Post, batch: number) => {
-  // console.log('post', post)
   const batchJobs = post?.kids?.slice(0, batch)
   const jobs: Job[] = []
   for (let id of batchJobs) {
     const job = await fetchItemById(id?.toString())
-    // console.log('job', job)
     jobs.push(job)
   }
   return Promise.all(jobs)

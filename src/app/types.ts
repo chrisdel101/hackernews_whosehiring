@@ -1,4 +1,4 @@
-import { Months, Years } from "./constants"
+import { Months, MonthsNumber, Years } from "./constants"
 
 export type JobText = {
     heading: string,
@@ -30,3 +30,9 @@ export type User = {
 }
 export type MonthKey = keyof typeof Months
 export type YearKey = keyof typeof Years
+
+export type URLParams = {
+    year: Years
+    month: MonthsNumber
+
+}

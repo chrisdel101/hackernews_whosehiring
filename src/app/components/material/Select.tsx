@@ -7,8 +7,8 @@ import Select, { SelectChangeEvent } from '@mui/material/Select'
 import { Months, Years } from '@/app/constants'
 import { MonthKey, YearKey } from '@/app/types'
 import { ReactNode } from 'react'
+
 interface IProps {
-  width?: string
   values: typeof Months | typeof Years
   defaultValue: MonthKey | YearKey
   handleChangeProp?: ((event: SelectChangeEvent<string>, child: ReactNode) => void)
@@ -16,7 +16,6 @@ interface IProps {
 }
 
 export default function AppSelect({
-  width,
   values,
   defaultValue,
   handleChangeProp,

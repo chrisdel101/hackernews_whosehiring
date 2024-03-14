@@ -1,11 +1,9 @@
 'use client'
 import * as React from 'react'
-import { styled, alpha } from '@mui/material/styles'
 import AppBar from '@mui/material/AppBar'
 import Box from '@mui/material/Box'
 import Toolbar from '@mui/material/Toolbar'
 import Typography from '@mui/material/Typography'
-import InputBase from '@mui/material/InputBase'
 import useMediaQuery from '@mui/material/useMediaQuery'
 import AppSelect from './Select'
 import {
@@ -14,9 +12,7 @@ import {
   Months,
   Years
 } from '@/app/constants'
-import { useState } from 'react'
 import { MonthKey, YearKey } from '@/app/types'
-import { URLParams } from '@/app/page'
 import { SelectChangeEvent } from '@mui/material'
 
 interface IProps {
@@ -47,14 +43,12 @@ export default function NavAppBar({ handleChange, params }: IProps) {
           </Typography>
           {/* default value uses value to get key */}
           <AppSelect
-            width={'100px'}
             values={Months}
             defaultValue={monthKey}
             handleChangeProp={handleChange}
             labelText="Select Month"
           />
           <AppSelect
-            width={'50px'}
             values={Years}
             defaultValue={yearKey}
             handleChangeProp={handleChange}
