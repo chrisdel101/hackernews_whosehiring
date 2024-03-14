@@ -1,23 +1,23 @@
-import { Inter } from "next/font/google";
-import "./globals.css";
-import { AppRouterCacheProvider } from '@mui/material-nextjs/v13-appRouter';
+import { Inter } from "next/font/google"
+import "./globals.css"
+import { AppRouterCacheProvider } from '@mui/material-nextjs/v13-appRouter'
 
-const inter = Inter({ subsets: ["latin"] });
+const inter = Inter({ subsets: ["latin"] })
 
 export default function RootLayout({
   children,
 }: Readonly<{
-  children: React.ReactNode;
+  children: React.ReactNode
 }>) {
   return (
     <html lang="en">
       <AppRouterCacheProvider>
-      <body className={inter.className}>
-        <div className="root-layout">
-        {children}   
-        </div>
-       </body>
+        <body className={inter.className}>
+          <div className="root-layout">
+            {children}
+          </div>
+        </body>
       </AppRouterCacheProvider>
     </html>
-  );
+  )
 }

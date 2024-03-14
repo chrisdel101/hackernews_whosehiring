@@ -1,10 +1,10 @@
 import { Years, YearsNumber, Months, MonthsNumber } from './constants'
-import { Job, JobObject, JobText, MonthKey, Post, User } from '@/app/types'
-import { fetchItemById } from '@/apiClient/fetch';
+import { Job, JobText, MonthKey, Post, User } from '@/app/types'
+import { fetchItemById } from '@/apiClient/fetch'
 
 export const parseTimeStamp = (time: number) => {
   let date = new Date(time * 1000)
-  let options = { timeZone: 'UTC' };
+  let options = { timeZone: 'UTC' }
   return date.toLocaleDateString('en-US', options)
 }
 // confirm params are part of the Years/Months sets
@@ -22,7 +22,7 @@ export const parseJobText = (text: string | undefined) => {
   return {
     heading,
     descriptions,
-  } as JobText;
+  } as JobText
 }
 export const sortJobsNewest = (jobs: Job[]) => {
   const copyJobs = [...jobs]
@@ -49,8 +49,8 @@ export const isHiringPost = (post: Post) => {
 export const findMatchingPost = async (year: Years, month: MonthsNumber, userData: User) => {
   const { submitted } = userData
 
-  for (let index = 0; index < submitted.length; index++) {
-    const element = submitted[index].toString();
+  for (let index = 0;index < submitted.length;index++) {
+    const element = submitted[index].toString()
     //   // check timeStamp
     const item = await fetchItemById(element)
     if (compareTimeStamp(item.time, year, month)) {
@@ -62,12 +62,12 @@ export const findMatchingPost = async (year: Years, month: MonthsNumber, userDat
   }
 }
 export const compareTimeStamp = (timeStamp: number, year: Years, month: MonthsNumber) => {
-  const startDate = new Date(`${month} 1, ${year}`).getTime() / 1000; // Convert milliseconds to seconds
-  const nextMonthDate = new Date(`${month} 1, ${year}`);
+  const startDate = new Date(`${month} 1, ${year}`).getTime() / 1000 // Convert milliseconds to seconds
+  const nextMonthDate = new Date(`${month} 1, ${year}`)
   // increment month including to next year 
-  nextMonthDate.setMonth(nextMonthDate.getMonth() + 1); // Move to the next month
+  nextMonthDate.setMonth(nextMonthDate.getMonth() + 1) // Move to the next month
   // console.log('nextMonthDate', nextMonthDate)
-  const endDate = nextMonthDate.getTime() / 1000;
+  const endDate = nextMonthDate.getTime() / 1000
   if (timeStamp >= startDate && timeStamp < endDate) {
     return true
   }
@@ -114,5 +114,5 @@ export const getFirstJobsBatch = async (post: Post, batch: number) => {
 }
 export const checkForDupesArrOfObjs = (arrToLoop: Job[], arrToCheckIn: Job[]) => {
   // loop over larger arr
-  return arrToLoop.filter(jobA => !arrToCheckIn.some(jobB => jobA.id === jobB.id));
+  return arrToLoop.filter(jobA => !arrToCheckIn.some(jobB => jobA.id === jobB.id))
 } 

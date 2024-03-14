@@ -12,7 +12,7 @@ import {
   sortJobsOldest,
   checkForDupesArrOfObjs,
 } from '@/app/utils'
-import { Job, JobObject, JobText, Post } from '@/app/types'
+import { Job, JobText, Post } from '@/app/types'
 import { Layout } from './Layout' // Fixed import statement
 import { InView } from 'react-intersection-observer'
 import { fetchItemById } from '@/apiClient/fetch'
@@ -41,15 +41,15 @@ export default function JobsList({ firstJobs, post, batchSize }: IProps) {
     getBatchJobs(batchSize)
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
-  useEffect(() => { 
-    if(checked){
-      if(sortedJobs.length != allJobs.length){
+  useEffect(() => {
+    if (checked) {
+      if (sortedJobs.length != allJobs.length) {
         console.log('sorted', sortedJobs.length)
         console.log('all', allJobs.length)
         displayAllJobs()
       }
     }
-   }, [checked, allJobs])
+  }, [checked, allJobs])
   const handleFilter = (
     event: React.MouseEvent<HTMLElement>,
     newFilter: string | null
@@ -69,10 +69,10 @@ export default function JobsList({ firstJobs, post, batchSize }: IProps) {
     const currentBatch = allJobs?.slice(allJobsIndex, allJobsIndex + batchSize)
     if (currentBatch.length > 0) {
       setSortedJobs((prevState: Job[]) => {
-        const newData = checkForDupesArrOfObjs(currentBatch, prevState);
+        const newData = checkForDupesArrOfObjs(currentBatch, prevState)
         console.log("newData", newData)
-        return [...prevState, ...newData];
-      });
+        return [...prevState, ...newData]
+      })
       setAllJobsIndex(prev => prev + batchSize)
     }
 
@@ -84,7 +84,7 @@ export default function JobsList({ firstJobs, post, batchSize }: IProps) {
     //  slice off first batch - comes from server on load
     let jobIDsLeft = post?.kids?.slice(batchSize)
     // increment by batch size
-    for (let i = 0; i < jobIDsLeft.length; i += batchSize) {
+    for (let i = 0;i < jobIDsLeft.length;i += batchSize) {
       // make currentChunkSize the size of batch, or what's left at end of arr
       const currentChunkSize = Math.min(i + batchSize, jobIDsLeft.length)
       // cut off chunk of currentChunkSize size
@@ -96,9 +96,9 @@ export default function JobsList({ firstJobs, post, batchSize }: IProps) {
       // arr of obj objs
       const resovledJobsArr = await Promise.all(jobsPromises)
       setAllJobs((prevState: Job[]) => {
-        const newData = checkForDupesArrOfObjs(resovledJobsArr, prevState);
-        return [...prevState, ...newData];
-      });
+        const newData = checkForDupesArrOfObjs(resovledJobsArr, prevState)
+        return [...prevState, ...newData]
+      })
     }
   }
 
@@ -110,8 +110,8 @@ export default function JobsList({ firstJobs, post, batchSize }: IProps) {
     }
   }
   const handleCheckbox = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setChecked(event.target.checked);
-  };
+    setChecked(event.target.checked)
+  }
   return (
     <Layout>
       <main className={`${styles['jobs-list-container']}`}>

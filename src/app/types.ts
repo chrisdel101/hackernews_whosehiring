@@ -1,16 +1,15 @@
-import { Months, Years } from "./constants";
+import { Months, Years } from "./constants"
 
 export type JobText = {
     heading: string,
     descriptions: string[]
-};
-
+}
 export type Job = {
     id: string
     name: string
     text: string
     time: number
-  }
+}
 export type Post = {
     by: string
     id: number
@@ -25,12 +24,9 @@ export type User = {
     about: string,
     created: number,
     delay: number,
-    id:string,
+    id: string,
     karma: number,
     submitted: number[]
 }
-export type MonthKey = keyof typeof Months;
-export type YearKey = keyof typeof Years;
-export type JobObject = {
-    [id: string]: Job
-}
+export type MonthKey = keyof typeof Months
+export type YearKey = keyof typeof Years

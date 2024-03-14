@@ -22,16 +22,17 @@ export default function AppSelect({
   handleChangeProp,
   labelText
 }: IProps) {
-  
+
   return (
-    <Box sx={{ minWidth: 120, 
-            '@media (min-width:768px)': {
-              minWidth: 150,
-          },
-            '@media (min-width:960px)': {
-              minWidth: 200,
-          },
-        }}>
+    <Box sx={{
+      minWidth: 120,
+      '@media (min-width:768px)': {
+        minWidth: 150,
+      },
+      '@media (min-width:960px)': {
+        minWidth: 200,
+      },
+    }}>
       <FormControl fullWidth>
         <InputLabel className="select-label">{labelText}</InputLabel>
         {/* default values is index number of enum list */}
@@ -40,12 +41,12 @@ export default function AppSelect({
           className="simple-select"
           value={defaultValue as string}
           onChange={handleChangeProp}
-         
+
         >
           {/* values are enum keys */}
           {Object.entries(values)?.map((pair, i) => {
             return (
-              <MenuItem  key={i} value={pair[0] as string}>{pair[1] as string}</MenuItem>
+              <MenuItem key={i} value={pair[0] as string}>{pair[1] as string}</MenuItem>
             )
           })}
         </Select>
