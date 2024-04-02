@@ -5,6 +5,7 @@ import JobsList from '../../components/client/JobsList'
 import { URLParams } from '@/app/types'
 import { findMatchingPost, verifyInputIsMonthYear, getFirstJobsBatch } from '@/app/utils'
 import { notFound } from 'next/navigation'
+import { revalidatePath } from 'next/cache'
 
 interface PageParams {
   params: URLParams
@@ -12,6 +13,7 @@ interface PageParams {
 
 export default async function Page({ params }: PageParams) {
   // fetch data for whoseHiring
+  revalidatePath(`${endPoint}/${whoseHiring}.json`)
   const userData = await fetchData(`${endPoint}/${whoseHiring}.json`)
   const batch = 20
   const { year, month } = params
