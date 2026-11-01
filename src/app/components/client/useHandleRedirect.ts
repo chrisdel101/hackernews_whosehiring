@@ -2,7 +2,8 @@
 import { useState, useEffect } from 'react'
 import { useRouter, usePathname } from 'next/navigation'
 import { getMontNumberFromName, getMonthKeyFromNumber, parsePathName } from '@/app/utils'
-import { Months, Years } from '@/app/constants'
+import { Months } from '@/app/constants'
+import { Years } from '@/app/utils'
 import { MonthKey } from '@/app/types'
 
 // handle input from drop down router

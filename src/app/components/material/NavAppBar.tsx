@@ -9,9 +9,9 @@ import AppSelect from './Select'
 import {
   navTitleLarge,
   navTitleXS,
-  Months,
-  Years
+  Months
 } from '@/app/constants'
+import { Years } from '@/app/utils'
 import { MonthKey, YearKey } from '@/app/types'
 import { SelectChangeEvent } from '@mui/material'
 

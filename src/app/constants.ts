@@ -44,18 +44,5 @@ export enum MonthsNumber {
     DECEMBER = "12"
 }
 
-export enum Years {
-    TWENTY = "2020",
-    TWENTY_ONE = "2021",
-    TWENTY_TWO = "2022",
-    TWENTY_THREE = "2023",
-    TWENTY_FOUR = "2024"
-}
-export enum YearsNumber {
-    NINETEEN = "19",
-    TWENTY = "20",
-    TWENTY_ONE = "21",
-    TWENTY_TWO = "22",
-    TWENTY_THREE = "23",
-    TWENTY_FOUR = "24"
-}
+// first year in the Select Year list
+export const firstYear = 2020

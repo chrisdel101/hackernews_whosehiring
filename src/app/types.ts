@@ -1,4 +1,5 @@
-import { Months, MonthsNumber, Years } from "./constants"
+import { Months, MonthsNumber } from "./constants"
+import type { Years } from "./utils"
 
 export type JobText = {
     heading: string,

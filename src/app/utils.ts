@@ -1,6 +1,19 @@
-import { Years, YearsNumber, Months, MonthsNumber } from './constants'
+import { Months, MonthsNumber, firstYear } from './constants'
 import { Job, JobText, MonthKey, Post, User } from '@/app/types'
 import { fetchItemById } from '@/apiClient/fetch'
+
+// years from start to the current year - no manual updates needed
+const yearsRange = (start: number) =>
+  Array.from({ length: new Date().getFullYear() - start + 1 }, (_, i) => start + i)
+
+export type Years = string
+export const Years: Record<string, Years> = Object.fromEntries(
+  yearsRange(firstYear).map(year => [`Y${year}`, `${year}`])
+)
+export type YearsNumber = string
+export const YearsNumber: Record<string, YearsNumber> = Object.fromEntries(
+  yearsRange(firstYear - 1).map(year => [`Y${year}`, `${year % 100}`])
+)
 
 export const parseTimeStamp = (time: number) => {
   let date = new Date(time * 1000)
@@ -53,6 +66,8 @@ export const findMatchingPost = async (year: Years, month: MonthsNumber, userDat
     const element = submitted[index].toString()
     //   // check timeStamp
     const item = await fetchItemById(element)
+    // submitted is newest first - stop once past the month
+    if (item.time < new Date(`${month} 1, ${year}`).getTime() / 1000) return
     if (compareTimeStamp(item.time, year, month)) {
       // check if post is Whose Hiring
       if (item?.title.toLowerCase().includes('hiring')) {
@@ -99,7 +114,18 @@ export const getCurrentDate = () => {
     month
   }
 }
-// returns the first batch from 0-batch index 
+// year/month of the newest Who is hiring post - current month's may not be posted yet
+export const getLatestPostDate = async (userData: User) => {
+  for (const id of userData?.submitted ?? []) {
+    const item = await fetchItemById(id.toString())
+    if (item?.title?.toLowerCase().includes('who is hiring')) {
+      const date = new Date(item.time * 1000)
+      return { year: date.getFullYear(), month: date.getMonth() + 1 }
+    }
+  }
+  return getCurrentDate()
+}
+// returns the first batch from 0-batch index
 export const getFirstJobsBatch = async (post: Post, batch: number) => {
   const batchJobs = post?.kids?.slice(0, batch)
   const jobs: Job[] = []
